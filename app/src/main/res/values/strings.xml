@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">ToDo Manager</string>
+    <string name="title_task_detail">Task Detail</string>
+</resources>
