@@ -1,9 +1,14 @@
 package cc.uah.es.todomanager;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -13,11 +18,14 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 
 import cc.uah.es.todomanager.domain.TaskList;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -30,7 +38,7 @@ import java.util.List;
  * item details. On tablets, the activity presents the list of items and
  * item details side-by-side using two vertical panes.
  */
-public class TaskListActivity extends AppCompatActivity {
+public class TaskListActivity extends AppCompatActivity implements CompleteTaskDialog.CompleteDialogListener, CancelTaskDialog.CancelDialogListener {
 
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
@@ -42,6 +50,7 @@ public class TaskListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_list);
+        TaskList.fillSampleData(TaskList.getInstance());
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -96,12 +105,35 @@ public class TaskListActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onBindViewHolder(final ViewHolder holder, int position) {
+        public void onBindViewHolder(final ViewHolder holder, final int position) {
             holder.mItem = mValues.get(position);
-            holder.mIdView.setText(Long.toString(mValues.get(position).getId()));
-            holder.mContentView.setText(mValues.get(position).getName());
+            if (holder.mItem.getStatus() instanceof TaskList.PendingTask) {
+                switch (holder.mItem.getPriority()) {
+                    case TaskList.Task.HIGH_PRIORITY:
+                        holder.mNameView.setTextColor(getResources().getColor(R.color.high_priority));
+                        break;
+                    case TaskList.Task.LOW_PRIORITY:
+                        holder.mNameView.setTextColor(getResources().getColor(R.color.low_priority));
+                        break;
+                    default: holder.mNameView.setTextColor(getResources().getColor(R.color.medium_priority));
+                }
+            } else {
+                if (holder.mItem.getStatus() instanceof TaskList.CompletedTask) holder.mNameView.setTextColor(getResources().getColor(R.color.completed));
+                else if (holder.mItem.getStatus() instanceof TaskList.CanceledTask) holder.mNameView.setTextColor(getResources().getColor(R.color.canceled));
+            }
 
-            holder.mView.setOnClickListener(new View.OnClickListener() {
+            holder.mNameView.setText(holder.mItem.getName());
+            if (holder.mItem.getDeadline() != null)
+            holder.mDeadlineView.setText(DateFormat.getDateInstance(DateFormat.SHORT).format(holder.mItem.getDeadline()));
+            if (holder.mItem.getStatus() instanceof TaskList.CompletedTask | holder.mItem.getStatus() instanceof  TaskList.CanceledTask) {
+                holder.mCompleteButton.setVisibility(View.INVISIBLE);
+                holder.mCancelButton.setVisibility(View.INVISIBLE);
+            } else {
+                holder.mCompleteButton.setVisibility(View.VISIBLE);
+                holder.mCancelButton.setVisibility(View.VISIBLE);
+            }
+
+            holder.mNameView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (mTwoPane) {
@@ -121,6 +153,21 @@ public class TaskListActivity extends AppCompatActivity {
                     }
                 }
             });
+
+            holder.mCompleteButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    CompleteTaskDialog dialog = new CompleteTaskDialog(holder.mItem, position);
+                    dialog.show(getFragmentManager(), "CompleteTask");
+                }
+            });
+            holder.mCancelButton.setOnClickListener((new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+CancelTaskDialog dialog = new CancelTaskDialog(holder.mItem, position);
+                    dialog.show(getSupportFragmentManager(), "CancelDialog");
+                }
+            }));
         }
 
         @Override
@@ -130,21 +177,38 @@ public class TaskListActivity extends AppCompatActivity {
 
         public class ViewHolder extends RecyclerView.ViewHolder {
             public final View mView;
-            public final TextView mIdView;
-            public final TextView mContentView;
+            public final TextView mNameView;
+            public final TextView mDeadlineView;
+            public final ImageButton mCancelButton;
+            public final ImageButton mCompleteButton;
             public TaskList.Task mItem;
 
             public ViewHolder(View view) {
                 super(view);
                 mView = view;
-                mIdView = (TextView) view.findViewById(R.id.id);
-                mContentView = (TextView) view.findViewById(R.id.content);
+                mNameView = (TextView) view.findViewById(R.id.name);
+                mDeadlineView = (TextView) view.findViewById(R.id.deadline);
+                mCancelButton = (ImageButton) view.findViewById(R.id.cancel_button);
+                mCompleteButton = (ImageButton) view.findViewById(R.id.complete_button);
             }
 
             @Override
             public String toString() {
-                return super.toString() + " '" + mContentView.getText() + "'";
+                return super.toString() + " '" + mNameView.getText() + "'";
             }
         }
     }
+
+    @Override
+    public void onCancel(int position) {
+        RecyclerView list = (RecyclerView) findViewById(R.id.task_list);
+        list.getAdapter().notifyItemChanged(position);
+    }
+
+    @Override
+    public void onComplete(int position) {
+        RecyclerView list = (RecyclerView) findViewById(R.id.task_list);
+        list.getAdapter().notifyItemChanged(position);
+    }
 }
+

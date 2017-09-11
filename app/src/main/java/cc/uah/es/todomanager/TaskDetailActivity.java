@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
@@ -17,6 +18,7 @@ import android.view.MenuItem;
  * in a {@link TaskListActivity}.
  */
 public class TaskDetailActivity extends AppCompatActivity {
+    private final static String TAG = "TaskDetailActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,9 +54,10 @@ public class TaskDetailActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
+            Log.d(TAG, "Task ID: " + getIntent().getLongExtra(TaskDetailFragment.ARG_ITEM_ID, 0));
             Bundle arguments = new Bundle();
-            arguments.putString(TaskDetailFragment.ARG_ITEM_ID,
-                    getIntent().getStringExtra(TaskDetailFragment.ARG_ITEM_ID));
+            arguments.putLong(TaskDetailFragment.ARG_ITEM_ID,
+                    getIntent().getLongExtra(TaskDetailFragment.ARG_ITEM_ID, 0));
             TaskDetailFragment fragment = new TaskDetailFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()
