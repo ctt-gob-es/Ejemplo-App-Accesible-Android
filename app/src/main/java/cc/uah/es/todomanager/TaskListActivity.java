@@ -124,6 +124,8 @@ public class TaskListActivity extends AppCompatActivity implements CompleteTaskD
             }
 
             holder.mNameView.setText(holder.mItem.getName());
+            if (holder.mItem.isComplex() & holder.mItem.getStatus() instanceof TaskList.PendingTask)
+                holder.mNameView.append("\n" + String.format(getResources().getString(R.string.percentage_completed), holder.mItem.getCompleted()));
             if (holder.mItem.getDeadline() != null)
             holder.mDeadlineView.setText(DateFormat.getDateInstance(DateFormat.SHORT).format(holder.mItem.getDeadline()));
             if (holder.mItem.getStatus() instanceof TaskList.CompletedTask | holder.mItem.getStatus() instanceof  TaskList.CanceledTask) {

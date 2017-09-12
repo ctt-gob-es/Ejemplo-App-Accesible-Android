@@ -9,5 +9,6 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="task_completed">The task has been completed correctly.</string>
+    <string name="percentage_completed">%1$d%% completed</string>
     <string name="task_canceled">The task has been canceled correctly.</string>
 </resources>
