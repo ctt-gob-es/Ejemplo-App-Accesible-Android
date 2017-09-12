@@ -29,15 +29,15 @@
         android:orientation="vertical">
     <ImageButton
         android:id="@+id/cancel_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
         android:layout_margin="@dimen/text_margin"
         android:src="@android:drawable/ic_menu_close_clear_cancel"/>
 
     <ImageButton
         android:id="@+id/complete_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
         android:layout_margin="@dimen/text_margin"
         android:src="@android:drawable/ic_menu_manage"/>
 </LinearLayout>

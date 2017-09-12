@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import cc.uah.es.todomanager.domain.TaskList;
@@ -203,12 +204,16 @@ CancelTaskDialog dialog = new CancelTaskDialog(holder.mItem, position);
     public void onCancel(int position) {
         RecyclerView list = (RecyclerView) findViewById(R.id.task_list);
         list.getAdapter().notifyItemChanged(position);
+        Toast toast = Toast.makeText(getApplicationContext(), R.string.task_canceled, Toast.LENGTH_SHORT);
+        toast.show();
     }
 
     @Override
     public void onComplete(int position) {
         RecyclerView list = (RecyclerView) findViewById(R.id.task_list);
         list.getAdapter().notifyItemChanged(position);
+        Toast toast = Toast.makeText(getApplicationContext(), R.string.task_completed, Toast.LENGTH_SHORT);
+        toast.show();
     }
 }
 

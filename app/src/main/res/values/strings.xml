@@ -8,4 +8,6 @@
     <string name="cancel_task_dialog_message">Task \'%1$s\' will be canceled. Do you want to continue?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="task_completed">The task has been completed correctly.</string>
+    <string name="task_canceled">The task has been canceled correctly.</string>
 </resources>
