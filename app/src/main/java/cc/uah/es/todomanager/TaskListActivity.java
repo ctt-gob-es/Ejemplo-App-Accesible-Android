@@ -160,15 +160,13 @@ public class TaskListActivity extends AppCompatActivity implements CompleteTaskD
             holder.mCompleteButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    CompleteTaskDialog dialog = new CompleteTaskDialog(holder.mItem, position);
-                    dialog.show(getFragmentManager(), "CompleteTask");
+                    completeTask(holder.mItem, position);
                 }
             });
             holder.mCancelButton.setOnClickListener((new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-CancelTaskDialog dialog = new CancelTaskDialog(holder.mItem, position);
-                    dialog.show(getSupportFragmentManager(), "CancelDialog");
+cancelTask(holder.mItem, position);
                 }
             }));
         }
@@ -200,6 +198,16 @@ CancelTaskDialog dialog = new CancelTaskDialog(holder.mItem, position);
                 return super.toString() + " '" + mNameView.getText() + "'";
             }
         }
+    }
+
+    protected void completeTask(TaskList.Task task, int position) {
+        CompleteTaskDialog dialog = new CompleteTaskDialog(task, position, this);
+        dialog.show(getSupportFragmentManager(), "CompleteTask");
+    }
+
+    protected void cancelTask (TaskList.Task task, int position) {
+        CancelTaskDialog dialog = new CancelTaskDialog(task, position, this);
+        dialog.show(getSupportFragmentManager(), "CancelDialog");
     }
 
     @Override

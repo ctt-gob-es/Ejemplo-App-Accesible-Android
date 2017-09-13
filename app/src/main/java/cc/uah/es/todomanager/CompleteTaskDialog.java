@@ -3,6 +3,7 @@ package cc.uah.es.todomanager;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -15,27 +16,17 @@ import cc.uah.es.todomanager.domain.TaskList;
  * Created by Fjest on 11/09/2017.
  */
 
-public class CompleteTaskDialog extends DialogFragment {
+public class CompleteTaskDialog extends android.support.v4.app.DialogFragment {
     private static final String TAG = "CompleteTaskDialog";
 
     private TaskList.Task task;
     private int position;
     private CompleteDialogListener listener;
 
-    public CompleteTaskDialog(TaskList.Task task, int position) {
+    public CompleteTaskDialog(TaskList.Task task, int position, CompleteDialogListener listener) {
         this.task = task;
         this.position = position;
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-listener = (CompleteDialogListener) activity;
-        } catch (ClassCastException cce) {
-            Log.e(TAG, "The listener must be a CompleteDialogListener instance.");
-            throw new ClassCastException(activity.toString());
-        }
+        this.listener = listener;
     }
 
     @NonNull

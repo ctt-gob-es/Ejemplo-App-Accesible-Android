@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SeekBar;
@@ -21,7 +22,7 @@ import cc.uah.es.todomanager.domain.TaskList;
  * in two-pane mode (on tablets) or a {@link TaskDetailActivity}
  * on handsets.
  */
-public class TaskDetailFragment extends Fragment {
+public class TaskDetailFragment extends Fragment implements CompleteTaskDialog.CompleteDialogListener, CancelTaskDialog.CancelDialogListener {
     /**
      * The fragment argument representing the item ID that this fragment
      * represents.
@@ -32,6 +33,7 @@ public class TaskDetailFragment extends Fragment {
      * The dummy content this fragment is presenting.
      */
     private TaskList.Task mItem;
+    private View rootView;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -60,6 +62,7 @@ public class TaskDetailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.task_detail, container, false);
+        this.rootView = rootView;
 
         // Show the dummy content as text in a TextView.
         if (mItem != null) {
@@ -97,11 +100,50 @@ public class TaskDetailFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.task_menu, menu);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
         if (!(mItem.getStatus() instanceof TaskList.PendingTask)) {
             menu.removeItem(R.id.complete_button);
             menu.removeItem(R.id.cancel_button);
         }
     }
 
+    @Override
+    public void onComplete(int position) {
+        ((TextView) rootView.findViewById(R.id.task_status)).setText(getResources().getString(R.string.task_status) + " " + getResources().getString(R.string.completed_task));
+        getActivity().invalidateOptionsMenu();
+    }
+
+    @Override
+    public void onCancel(int position) {
+        ((TextView) rootView.findViewById(R.id.task_status)).setText(getResources().getString(R.string.task_status) + " " + getResources().getString(R.string.canceled_task));
+        getActivity().invalidateOptionsMenu();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.edit_task_option: editTask(); return true;
+            case R.id.complete_button: completeTask();; return true;
+            case R.id.cancel_button: cancelTask();; return true;
+            default: return super.onOptionsItemSelected(item);
+        }
+    }
+
+    protected void editTask() {
+
+    }
+
+    protected void completeTask() {
+        CompleteTaskDialog dialog = new CompleteTaskDialog(mItem, -1, this);
+        dialog.show(getFragmentManager(), "CompleteTask");
+    }
+
+    protected void cancelTask() {
+        CancelTaskDialog dialog = new CancelTaskDialog(mItem, -1, this);
+        dialog.show(getFragmentManager(), "CancelDialog");
+    }
 }
 

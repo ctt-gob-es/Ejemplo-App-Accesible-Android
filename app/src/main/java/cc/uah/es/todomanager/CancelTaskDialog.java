@@ -3,10 +3,10 @@ package cc.uah.es.todomanager;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.DialogFragment;
 import android.util.Log;
 
 import cc.uah.es.todomanager.domain.TaskList;
@@ -15,27 +15,17 @@ import cc.uah.es.todomanager.domain.TaskList;
  * Created by Fjest on 11/09/2017.
  */
 
-public class CancelTaskDialog extends DialogFragment{
+public class CancelTaskDialog extends android.support.v4.app.DialogFragment{
     private static final String TAG = "CancelTaskDialog";
 
     private TaskList.Task task;
     private int position;
     private CancelDialogListener listener;
 
-    public CancelTaskDialog(TaskList.Task task, int position) {
+    public CancelTaskDialog(TaskList.Task task, int position, CancelDialogListener listener) {
         this.task = task;
         this.position = position;
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            listener = (CancelDialogListener) activity;
-        } catch (ClassCastException cce) {
-            Log.e(TAG, "The activity must be a CancelDialogListener instance.");
-            throw new ClassCastException(activity.toString());
-        }
+        this.listener = listener;
     }
 
     @NonNull
