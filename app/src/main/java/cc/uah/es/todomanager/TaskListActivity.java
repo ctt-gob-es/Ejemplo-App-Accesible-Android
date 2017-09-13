@@ -39,7 +39,7 @@ import java.util.List;
  * item details. On tablets, the activity presents the list of items and
  * item details side-by-side using two vertical panes.
  */
-public class TaskListActivity extends AppCompatActivity implements CompleteTaskDialog.CompleteDialogListener, CancelTaskDialog.CancelDialogListener {
+public class TaskListActivity extends AppCompatActivity implements CompleteTaskDialog.CompleteDialogListener, CancelTaskDialog.CancelDialogListener, OnTaskChangedListener {
 
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
@@ -139,21 +139,7 @@ public class TaskListActivity extends AppCompatActivity implements CompleteTaskD
             holder.mNameView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (mTwoPane) {
-                        Bundle arguments = new Bundle();
-                        arguments.putLong(TaskDetailFragment.ARG_ITEM_ID, holder.mItem.getId());
-                        TaskDetailFragment fragment = new TaskDetailFragment();
-                        fragment.setArguments(arguments);
-                        getSupportFragmentManager().beginTransaction()
-                                .replace(R.id.task_detail_container, fragment)
-                                .commit();
-                    } else {
-                        Context context = v.getContext();
-                        Intent intent = new Intent(context, TaskDetailActivity.class);
-                        intent.putExtra(TaskDetailFragment.ARG_ITEM_ID, holder.mItem.getId());
-
-                        context.startActivity(intent);
-                    }
+                    viewTask(holder.mItem, position, v);
                 }
             });
 
@@ -210,20 +196,54 @@ cancelTask(holder.mItem, position);
         dialog.show(getSupportFragmentManager(), "CancelDialog");
     }
 
+    protected void viewTask(TaskList.Task task, int position, View v) {
+        if (mTwoPane) {
+            Bundle arguments = new Bundle();
+            arguments.putLong(TaskDetailFragment.ARG_ITEM_ID, task.getId());
+            arguments.putInt(TaskDetailFragment.ARG_ITEM_POS, position);
+            TaskDetailFragment fragment = new TaskDetailFragment();
+            fragment.setArguments(arguments);
+            fragment.setOnTaskChangedListener(this);
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.task_detail_container, fragment)
+                    .commit();
+        } else {
+            Context context = v.getContext();
+            Intent intent = new Intent(context, TaskDetailActivity.class);
+            intent.putExtra(TaskDetailFragment.ARG_ITEM_ID, task.getId());
+            intent.putExtra(TaskDetailFragment.ARG_ITEM_POS, position);
+
+            startActivityForResult(intent, TaskDetailActivity.ACTIVITY_CODE);
+        }
+    }
+
     @Override
     public void onCancel(int position) {
-        RecyclerView list = (RecyclerView) findViewById(R.id.task_list);
-        list.getAdapter().notifyItemChanged(position);
+        onTaskChanged(position);
         Toast toast = Toast.makeText(getApplicationContext(), R.string.task_canceled, Toast.LENGTH_SHORT);
         toast.show();
     }
 
     @Override
     public void onComplete(int position) {
-        RecyclerView list = (RecyclerView) findViewById(R.id.task_list);
-        list.getAdapter().notifyItemChanged(position);
+        onTaskChanged(position);
         Toast toast = Toast.makeText(getApplicationContext(), R.string.task_completed, Toast.LENGTH_SHORT);
         toast.show();
+    }
+
+    @Override
+    public void onTaskChanged(int position) {
+        RecyclerView list = (RecyclerView) findViewById(R.id.task_list);
+        list.getAdapter().notifyItemChanged(position);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case TaskDetailActivity.ACTIVITY_CODE:
+                if (resultCode == TaskDetailActivity.CHANGED) onTaskChanged(data.getExtras().getInt(TaskDetailFragment.ARG_ITEM_POS));
+                break;
+        }
     }
 }
 

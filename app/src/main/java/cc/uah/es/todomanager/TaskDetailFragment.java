@@ -28,11 +28,14 @@ public class TaskDetailFragment extends Fragment implements CompleteTaskDialog.C
      * represents.
      */
     public static final String ARG_ITEM_ID = "item_id";
+    public static final String ARG_ITEM_POS = "item_ps";
 
     /**
      * The dummy content this fragment is presenting.
      */
     private TaskList.Task mItem;
+    private int position;
+    private OnTaskChangedListener listener = null;
     private View rootView;
 
     /**
@@ -49,6 +52,7 @@ public class TaskDetailFragment extends Fragment implements CompleteTaskDialog.C
         if (getArguments().containsKey(ARG_ITEM_ID)) {
             // Load the task.
             mItem = TaskList.getInstance().getTask(getArguments().getLong(ARG_ITEM_ID));
+            position = getArguments().getInt(ARG_ITEM_POS);
 
             Activity activity = this.getActivity();
             CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
@@ -84,7 +88,29 @@ public class TaskDetailFragment extends Fragment implements CompleteTaskDialog.C
             ((TextView) rootView.findViewById(R.id.task_description)).append("\n" + mItem.getDetails());
             if (mItem.getDeadline() != null) ((TextView) rootView.findViewById(R.id.task_deadline)).append(" " + DateFormat.getDateInstance(DateFormat.SHORT).format(mItem.getDeadline()));
             else ((View) rootView.findViewById(R.id.task_deadline)).setVisibility(View.INVISIBLE);
-            if (mItem.isComplex()) ((SeekBar) rootView.findViewById(R.id.task_progress)).setProgress(mItem.getCompleted());
+            if (mItem.isComplex()) {
+                SeekBar bar = (SeekBar) rootView.findViewById(R.id.task_progress);
+                bar.setProgress(mItem.getCompleted());
+                bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                    @Override
+                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                        mItem.setCompleted(progress);
+                        if (progress == 100) completeTask();
+                        listener.onTaskChanged(position);
+                    }
+
+                    @Override
+                    public void onStartTrackingTouch(SeekBar seekBar) {
+
+                    }
+
+                    @Override
+                    public void onStopTrackingTouch(SeekBar seekBar) {
+
+                    }
+                });
+
+            }
             else {
                 ((View) rootView.findViewById(R.id.task_progress)).setVisibility(View.INVISIBLE);
                 ((View) rootView.findViewById(R.id.task_completion)).setVisibility(View.INVISIBLE);
@@ -113,12 +139,14 @@ public class TaskDetailFragment extends Fragment implements CompleteTaskDialog.C
     @Override
     public void onComplete(int position) {
         ((TextView) rootView.findViewById(R.id.task_status)).setText(getResources().getString(R.string.task_status) + " " + getResources().getString(R.string.completed_task));
+        listener.onTaskChanged(position);
         getActivity().invalidateOptionsMenu();
     }
 
     @Override
     public void onCancel(int position) {
         ((TextView) rootView.findViewById(R.id.task_status)).setText(getResources().getString(R.string.task_status) + " " + getResources().getString(R.string.canceled_task));
+        listener.onTaskChanged(position);
         getActivity().invalidateOptionsMenu();
     }
 
@@ -137,13 +165,21 @@ public class TaskDetailFragment extends Fragment implements CompleteTaskDialog.C
     }
 
     protected void completeTask() {
-        CompleteTaskDialog dialog = new CompleteTaskDialog(mItem, -1, this);
+        CompleteTaskDialog dialog = new CompleteTaskDialog(mItem, position, this);
         dialog.show(getFragmentManager(), "CompleteTask");
     }
 
     protected void cancelTask() {
         CancelTaskDialog dialog = new CancelTaskDialog(mItem, -1, this);
         dialog.show(getFragmentManager(), "CancelDialog");
+    }
+
+    public OnTaskChangedListener getOnTaskChangedListener() {
+        return listener;
+    }
+
+    public void setOnTaskChangedListener(OnTaskChangedListener listener) {
+        this.listener = listener;
     }
 }
 

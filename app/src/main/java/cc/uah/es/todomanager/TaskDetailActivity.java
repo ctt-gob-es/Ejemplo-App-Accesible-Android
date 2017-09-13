@@ -17,8 +17,13 @@ import android.view.MenuItem;
  * item details are presented side-by-side with a list of items
  * in a {@link TaskListActivity}.
  */
-public class TaskDetailActivity extends AppCompatActivity {
+public class TaskDetailActivity extends AppCompatActivity implements OnTaskChangedListener{
     private final static String TAG = "TaskDetailActivity";
+    public static final int ACTIVITY_CODE = 1;
+    public final static int CHANGED = 1;
+    public final static int NOT_CHANGED = 0;
+    private boolean changed = false;
+    private int position;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,12 +50,14 @@ public class TaskDetailActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
-            Log.d(TAG, "Task ID: " + getIntent().getLongExtra(TaskDetailFragment.ARG_ITEM_ID, 0));
             Bundle arguments = new Bundle();
             arguments.putLong(TaskDetailFragment.ARG_ITEM_ID,
-                    getIntent().getLongExtra(TaskDetailFragment.ARG_ITEM_ID, 0));
+                    getIntent().getLongExtra(TaskDetailFragment.ARG_ITEM_ID, -1));
+            position = getIntent().getIntExtra(TaskDetailFragment.ARG_ITEM_POS, -1);
+            arguments.putInt(TaskDetailFragment.ARG_ITEM_POS, position);
             TaskDetailFragment fragment = new TaskDetailFragment();
             fragment.setArguments(arguments);
+            fragment.setOnTaskChangedListener(this);
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.task_detail_container, fragment)
                     .commit();
@@ -72,4 +79,19 @@ public class TaskDetailActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    public void onTaskChanged(int position) {
+        changed = true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent resultIntent = new Intent();
+        resultIntent.putExtra(TaskDetailFragment.ARG_ITEM_POS, position);
+        int result = changed ? CHANGED : NOT_CHANGED;
+        setResult(result, resultIntent);
+        finish();
+    }
 }
+
