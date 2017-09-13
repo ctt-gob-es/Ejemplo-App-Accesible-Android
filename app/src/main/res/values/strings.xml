@@ -11,4 +11,21 @@
     <string name="task_completed">The task has been completed correctly.</string>
     <string name="percentage_completed">%1$d%% completed</string>
     <string name="task_canceled">The task has been canceled correctly.</string>
+    <string name="task_details_title">Task details</string>
+    <string name="task_name">Title:</string>
+    <string name="task_priority">Priority:</string>
+    <string name="high_priority">High</string>
+    <string name="medium_priority">Medium</string>
+    <string name="low_priority">Low</string>
+    <string name="task_description">Description:</string>
+    <string name="task_deadline">Deadline:</string>
+    <string name="task_status">Status:</string>
+    <string name="pending_task">Pending</string>
+    <string name="completed_task">Completed</string>
+    <string name="canceled_task">Canceled</string>
+    <string name="task_completion">Completion:</string>
+    <string name="edit_task">Edit</string>
+    <string name="edit">Edit</string>
+    <string name="complete_task">Complete task</string>
+    <string name="cancel_task">Cancel task</string>
 </resources>

@@ -67,9 +67,9 @@ tasks.put(idSerial, new Task(idSerial++, name, details, priority, deadline, comp
         private int completed;
         private TaskStatus status;
 
-        public static final String LOW_PRIORITY = "low";
-        public static final String MEDIUM_PRIORITY = "medium";
-        public static final String HIGH_PRIORITY = "high";
+        public static final String LOW_PRIORITY = "low_priority";
+        public static final String MEDIUM_PRIORITY = "medium_priority";
+        public static final String HIGH_PRIORITY = "high_priority";
 
         public Task(long id, String name, String details, String priority, Date deadline, boolean complex) {
             this.id = id;
@@ -179,9 +179,12 @@ tasks.put(idSerial, new Task(idSerial++, name, details, priority, deadline, comp
         void complete(TaskList.Task task);
 
         void cancel(TaskList.Task task);
+
+        String getStatusDescription();
     }
 
     public static class PendingTask implements TaskStatus {
+        public static final String STATUS = "pending_task";
         @Override
         public void complete(TaskList.Task task) {
             task.setStatus(new CompletedTask());
@@ -192,9 +195,16 @@ tasks.put(idSerial, new Task(idSerial++, name, details, priority, deadline, comp
         public void cancel(TaskList.Task task) {
             task.setStatus(new CanceledTask());
         }
+
+        @Override
+        public String getStatusDescription() {
+            return STATUS;
+        }
     }
 
     public static class CompletedTask implements TaskStatus {
+        public static final String STATUS = "completed_task";
+
         @Override
         public void complete(TaskList.Task task) {
             throw new UnsupportedOperationException();
@@ -203,12 +213,19 @@ tasks.put(idSerial, new Task(idSerial++, name, details, priority, deadline, comp
         @Override
         public void cancel(TaskList.Task task) {
             throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public String getStatusDescription() {
+            return STATUS;
         }
     }
 
     public static class CanceledTask implements TaskStatus {
+        public static final String STATUS = "canceled_task";
+
         @Override
-        public void complete(TaskList.Task task) {
+    public void complete(TaskList.Task task) {
             throw new UnsupportedOperationException();
         }
 
@@ -216,5 +233,11 @@ tasks.put(idSerial, new Task(idSerial++, name, details, priority, deadline, comp
         public void cancel(TaskList.Task task) {
             throw new UnsupportedOperationException();
         }
+
+        @Override
+        public String getStatusDescription() {
+            return STATUS;
+        }
     }
+
     }

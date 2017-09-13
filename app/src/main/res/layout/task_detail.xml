@@ -1,9 +1,57 @@
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/task_detail"
-    style="?android:attr/textAppearanceLarge"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
-    android:textIsSelectable="true"
-    tools:context="cc.uah.es.todomanager.TaskDetailFragment" />
+    android:orientation="vertical"
+    tools:context="cc.uah.es.todomanager.TaskDetailFragment">
+<TextView
+    android:id="@+id/task_name"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/text_margin"
+    android:text="@string/task_name"/>
+
+    <TextView
+        android:id="@+id/task_priority"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/text_margin"
+        android:text="@string/task_priority"/>
+
+    <TextView
+        android:id="@+id/task_status"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/text_margin"
+        android:text="@string/task_status"/>
+
+    <TextView
+        android:id="@+id/task_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/text_margin"
+        android:text="@string/task_description"/>
+
+    <TextView
+        android:id="@+id/task_deadline"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/text_margin"
+        android:text="@string/task_deadline"/>
+
+    <TextView
+        android:id="@+id/task_completion"
+        android:labelFor="@+id/task_progress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/text_margin"
+        android:text="@string/task_completion"/>
+
+    <SeekBar
+        android:id="@+id/task_progress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:max="100"/>
+</LinearLayout>
