@@ -11,6 +11,7 @@ public class TaskList {
     private Map<Long, Task> tasks;
     private long idSerial   ;
     private static TaskList instance;
+    private static boolean isInitialized = false;
 
     private TaskList() {
         tasks = new HashMap<Long, Task>(10);
@@ -43,13 +44,16 @@ tasks.put(idSerial, new Task(idSerial++, name, details, priority, deadline, comp
      * A method to fill the list with sample data.
      */
     public static void fillSampleData(TaskList tasks) {
-        tasks.addTask("Pasear al perro", "Darle una vuelta de 15 minutos para que haga sus cositas", Task.MEDIUM_PRIORITY, null, false);
-        tasks.addTask("Envolver el regalo de Ana", "Comprar el papel de regalo y ponerle un lacito bonito.", Task.LOW_PRIORITY, Calendar.getInstance().getTime(), false);
-        tasks.addTask("Terminar la redacción de historia", "Investigar sobre los Reyes Católicos y resumir su reinado.", Task.HIGH_PRIORITY, Calendar.getInstance().getTime(), true);
-        tasks.addTask("Ir a ver Star Wars", "Quedar con Pedro para ir a ver la nueva película de Star Wars al cine.", Task.HIGH_PRIORITY, null, false);
-        tasks.getTask(1l).complete();
-        tasks.getTask   (3l).cancel();
-        tasks.getTask(2l).setCompleted(40);
+        if (!isInitialized) {
+            tasks.addTask("Pasear al perro", "Darle una vuelta de 15 minutos para que haga sus cositas", Task.MEDIUM_PRIORITY, null, false);
+            tasks.addTask("Envolver el regalo de Ana", "Comprar el papel de regalo y ponerle un lacito bonito.", Task.LOW_PRIORITY, Calendar.getInstance().getTime(), false);
+            tasks.addTask("Terminar la redacción de historia", "Investigar sobre los Reyes Católicos y resumir su reinado.", Task.HIGH_PRIORITY, Calendar.getInstance().getTime(), true);
+            tasks.addTask("Ir a ver Star Wars", "Quedar con Pedro para ir a ver la nueva película de Star Wars al cine.", Task.HIGH_PRIORITY, null, false);
+            tasks.getTask(1l).complete();
+            tasks.getTask(3l).cancel();
+            tasks.getTask(2l).setCompleted(40);
+isInitialized = true;
+        }
     }
 
     /**

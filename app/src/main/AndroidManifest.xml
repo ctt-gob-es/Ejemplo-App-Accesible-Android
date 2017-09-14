@@ -28,6 +28,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="cc.uah.es.todomanager.TaskListActivity" />
         </activity>
+        <activity
+            android:name=".NewTaskActivity"
+            android:label="@string/title_activity_new_task"
+            android:parentActivityName=".TaskListActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="cc.uah.es.todomanager.TaskListActivity" />
+        </activity>
     </application>
 
 </manifest>

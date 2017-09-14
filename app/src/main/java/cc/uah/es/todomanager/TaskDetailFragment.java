@@ -27,8 +27,8 @@ public class TaskDetailFragment extends Fragment implements CompleteTaskDialog.C
      * The fragment argument representing the item ID that this fragment
      * represents.
      */
-    public static final String ARG_ITEM_ID = "item_id";
-    public static final String ARG_ITEM_POS = "item_ps";
+    public static final String ARG_ITEM_ID = "cc.uah.es.todomanager.item_id";
+    public static final String ARG_ITEM_POS = "cc.uah.es.todomanager.item_ps";
 
     /**
      * The dummy content this fragment is presenting.

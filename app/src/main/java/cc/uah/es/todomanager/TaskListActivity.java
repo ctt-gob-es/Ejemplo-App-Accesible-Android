@@ -39,7 +39,7 @@ import java.util.List;
  * item details. On tablets, the activity presents the list of items and
  * item details side-by-side using two vertical panes.
  */
-public class TaskListActivity extends AppCompatActivity implements CompleteTaskDialog.CompleteDialogListener, CancelTaskDialog.CancelDialogListener, OnTaskChangedListener {
+public class TaskListActivity extends AppCompatActivity implements CompleteTaskDialog.CompleteDialogListener, CancelTaskDialog.CancelDialogListener, OnTaskChangedListener, NewTask1Fragment.OnNewTaskListener {
 
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
@@ -51,18 +51,18 @@ public class TaskListActivity extends AppCompatActivity implements CompleteTaskD
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_list);
-        TaskList.fillSampleData(TaskList.getInstance());
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
 
+        TaskList.fillSampleData(TaskList.getInstance());
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                newTask(view);
             }
         });
 
@@ -217,6 +217,19 @@ cancelTask(holder.mItem, position);
         }
     }
 
+    protected void newTask(View v) {
+        if (mTwoPane) {
+            NewTask1Fragment fragment = NewTask1Fragment.newInstance(this);
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.task_detail_container, fragment)
+                    .commit();
+        } else {
+            Context context = v.getContext();
+            Intent intent = new Intent(context, NewTaskActivity.class);
+            startActivityForResult(intent, NewTask1Fragment.ACTIVITY_CODE);
+        }
+    }
+
     @Override
     public void onCancel(int position) {
         onTaskChanged(position);
@@ -244,6 +257,26 @@ cancelTask(holder.mItem, position);
                 if (resultCode == TaskDetailActivity.CHANGED) onTaskChanged(data.getExtras().getInt(TaskDetailFragment.ARG_ITEM_POS));
                 break;
         }
+    }
+
+    @Override
+    public void onNewTaskNextStep(TaskList.Task task) {
+
+    }
+
+    @Override
+    public void onNewTaskPreviousStep(TaskList.Task task) {
+
+    }
+
+    @Override
+    public void onNewTaskCancel() {
+
+    }
+
+    @Override
+    public void onNewTaskFinish(TaskList.Task task) {
+
     }
 }
 
