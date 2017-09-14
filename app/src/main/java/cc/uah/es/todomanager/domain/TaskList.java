@@ -75,6 +75,16 @@ isInitialized = true;
         public static final String MEDIUM_PRIORITY = "medium_priority";
         public static final String HIGH_PRIORITY = "high_priority";
 
+        public Task() {
+            name = "";
+priority = MEDIUM_PRIORITY;
+            status = new PendingTask();
+            details = "";
+            complex = false;
+            deadline = null;
+            completed = 0;
+        }
+
         public Task(long id, String name, String details, String priority, Date deadline, boolean complex) {
             this.id = id;
             this.name = name;
