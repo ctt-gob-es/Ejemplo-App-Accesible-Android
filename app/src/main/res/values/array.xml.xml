@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="priority_options">
+        <item>High Priority</item>
+        <item>Medium priority</item>
+        <item>Low Priority</item>
+    </string-array>
+</resources>

@@ -36,7 +36,6 @@ public class TaskDetailFragment extends Fragment implements CompleteTaskDialog.C
     private TaskList.Task mItem;
     private int position;
     private OnTaskChangedListener listener = null;
-    private View rootView;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -66,7 +65,6 @@ public class TaskDetailFragment extends Fragment implements CompleteTaskDialog.C
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.task_detail, container, false);
-        this.rootView = rootView;
 
         // Show the dummy content as text in a TextView.
         if (mItem != null) {
@@ -138,14 +136,14 @@ public class TaskDetailFragment extends Fragment implements CompleteTaskDialog.C
 
     @Override
     public void onComplete(int position) {
-        ((TextView) rootView.findViewById(R.id.task_status)).setText(getResources().getString(R.string.task_status) + " " + getResources().getString(R.string.completed_task));
+        ((TextView) getView().findViewById(R.id.task_status)).setText(getResources().getString(R.string.task_status) + " " + getResources().getString(R.string.completed_task));
         listener.onTaskChanged(position);
         getActivity().invalidateOptionsMenu();
     }
 
     @Override
     public void onCancel(int position) {
-        ((TextView) rootView.findViewById(R.id.task_status)).setText(getResources().getString(R.string.task_status) + " " + getResources().getString(R.string.canceled_task));
+        ((TextView) getView().findViewById(R.id.task_status)).setText(getResources().getString(R.string.task_status) + " " + getResources().getString(R.string.canceled_task));
         listener.onTaskChanged(position);
         getActivity().invalidateOptionsMenu();
     }

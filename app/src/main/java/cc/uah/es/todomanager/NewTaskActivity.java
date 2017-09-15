@@ -1,17 +1,15 @@
 package cc.uah.es.todomanager;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 
 import cc.uah.es.todomanager.domain.TaskList;
 
-public class NewTaskActivity extends AppCompatActivity implements NewTask1Fragment.OnNewTaskListener {
+public class NewTaskActivity extends AppCompatActivity   {
 
     private TaskList.Task task;
+    private EditTask1Fragment formFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,34 +30,40 @@ public class NewTaskActivity extends AppCompatActivity implements NewTask1Fragme
         // http://developer.android.com/guide/components/fragments.html
         //
         if (savedInstanceState == null) {
+            task = new TaskList.Task();
             // Create the new task 1 fragment and add it to the activity
             // using a fragment transaction.
-            NewTask1Fragment fragment = NewTask1Fragment.newInstance(this);
+            formFragment = EditTask1Fragment.newInstance(new OnNewTaskListener(), task);
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.new_task_form_container, fragment)
+                    .add(R.id.new_task_form_container, formFragment)
                     .commit();
-
-            task = new TaskList.Task();
         }
     }
 
-    @Override
-    public void onNewTaskNextStep(TaskList.Task task) {
+    protected class OnNewTaskListener implements cc.uah.es.todomanager.OnEditTaskListener {
 
-    }
+        @Override
+        public void onNextStep(TaskList.Task task) {
 
-    @Override
-    public void onNewTaskPreviousStep(TaskList.Task task) {
+        }
 
-    }
+        @Override
+        public void onPreviousStep(TaskList.Task task) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.new_task_form_container, formFragment)
+                    .commit();
+        }
 
-    @Override
-    public void onNewTaskCancel() {
+        @Override
+        public void onCancel() {
+            setResult(EditTask1Fragment.TASK_CREATION_CANCELED);
+            finish();
+        }
 
-    }
+        @Override
+        public void onFinish(TaskList.Task task) {
 
-    @Override
-    public void onNewTaskFinish(TaskList.Task task) {
-
+        }
     }
 }
+

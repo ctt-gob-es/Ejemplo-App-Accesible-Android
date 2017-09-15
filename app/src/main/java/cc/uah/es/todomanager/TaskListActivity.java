@@ -1,25 +1,18 @@
 package cc.uah.es.todomanager;
 
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,7 +21,6 @@ import cc.uah.es.todomanager.domain.TaskList;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -39,7 +31,7 @@ import java.util.List;
  * item details. On tablets, the activity presents the list of items and
  * item details side-by-side using two vertical panes.
  */
-public class TaskListActivity extends AppCompatActivity implements CompleteTaskDialog.CompleteDialogListener, CancelTaskDialog.CancelDialogListener, OnTaskChangedListener, NewTask1Fragment.OnNewTaskListener {
+public class TaskListActivity extends AppCompatActivity implements CompleteTaskDialog.CompleteDialogListener, CancelTaskDialog.CancelDialogListener, OnTaskChangedListener {
 
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
@@ -219,35 +211,39 @@ cancelTask(holder.mItem, position);
 
     protected void newTask(View v) {
         if (mTwoPane) {
-            NewTask1Fragment fragment = NewTask1Fragment.newInstance(this);
+            EditTask1Fragment fragment = EditTask1Fragment.newInstance(new OnNewTaskListener(), new TaskList.Task());
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.task_detail_container, fragment)
                     .commit();
         } else {
             Context context = v.getContext();
             Intent intent = new Intent(context, NewTaskActivity.class);
-            startActivityForResult(intent, NewTask1Fragment.ACTIVITY_CODE);
+                    startActivityForResult(intent, EditTask1Fragment.ACTIVITY_CODE);
         }
+    }
+
+    protected void notifyTaskChanged(int position) {
+        RecyclerView list = (RecyclerView) findViewById(R.id.task_list);
+        list.getAdapter().notifyItemChanged(position);
     }
 
     @Override
     public void onCancel(int position) {
-        onTaskChanged(position);
+        notifyTaskChanged(position);
         Toast toast = Toast.makeText(getApplicationContext(), R.string.task_canceled, Toast.LENGTH_SHORT);
         toast.show();
     }
 
     @Override
     public void onComplete(int position) {
-        onTaskChanged(position);
+        notifyTaskChanged(position);
         Toast toast = Toast.makeText(getApplicationContext(), R.string.task_completed, Toast.LENGTH_SHORT);
         toast.show();
     }
 
     @Override
     public void onTaskChanged(int position) {
-        RecyclerView list = (RecyclerView) findViewById(R.id.task_list);
-        list.getAdapter().notifyItemChanged(position);
+notifyTaskChanged(position);
     }
 
     @Override
@@ -259,23 +255,27 @@ cancelTask(holder.mItem, position);
         }
     }
 
-    @Override
-    public void onNewTaskNextStep(TaskList.Task task) {
+    protected  class  OnNewTaskListener implements  OnEditTaskListener {
 
-    }
+        @Override
+        public void onNextStep(TaskList.Task task) {
 
-    @Override
-    public void onNewTaskPreviousStep(TaskList.Task task) {
+        }
 
-    }
+        @Override
+        public void onPreviousStep(TaskList.Task task) {
 
-    @Override
-    public void onNewTaskCancel() {
+        }
 
-    }
+        @Override
+        public void onCancel() {
 
-    @Override
-    public void onNewTaskFinish(TaskList.Task task) {
+        }
+
+        @Override
+        public void onFinish(TaskList.Task task) {
+
+        }
 
     }
 }
