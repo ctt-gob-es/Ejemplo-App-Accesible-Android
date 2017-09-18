@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -38,6 +40,7 @@ public class TaskListActivity extends AppCompatActivity implements CompleteTaskD
      * device.
      */
     private boolean mTwoPane;
+    private Fragment currentFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -279,23 +282,36 @@ notifyTaskChanged(position);
 
         @Override
         public void onNextStep(TaskList.Task task) {
-
+currentFragment = EditTask2Fragment.newInstance(task, new OnNewTaskListener());
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.task_detail_container, currentFragment)
+                    .commit();
         }
 
         @Override
         public void onPreviousStep(TaskList.Task task) {
-
+currentFragment = EditTask1Fragment.newInstance(new OnNewTaskListener(), new TaskList.Task());
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.task_detail_container, currentFragment)
+                    .commit();
         }
 
         @Override
         public void onCancel() {
-
+getSupportFragmentManager().beginTransaction()
+        .remove(currentFragment)
+        .commit();
+            currentFragment = null;
         }
 
         @Override
         public void onFinish(TaskList.Task task) {
 TaskList.getInstance().addTask(task);
             addTask();
+            getSupportFragmentManager().beginTransaction()
+                    .remove(currentFragment)
+                    .commit();
+            currentFragment = null;
         }
 
     }

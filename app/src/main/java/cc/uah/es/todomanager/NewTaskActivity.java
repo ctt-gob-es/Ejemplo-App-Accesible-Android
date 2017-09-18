@@ -4,13 +4,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 
 import cc.uah.es.todomanager.domain.TaskList;
 
 public class NewTaskActivity extends AppCompatActivity   {
     public static final int ACTIVITY_CODE = 2;
-    private TaskList.Task task;
-    private EditTask1Fragment formFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,27 +30,46 @@ public class NewTaskActivity extends AppCompatActivity   {
         // http://developer.android.com/guide/components/fragments.html
         //
         if (savedInstanceState == null) {
-            task = new TaskList.Task();
             // Create the new task 1 fragment and add it to the activity
             // using a fragment transaction.
-            formFragment = EditTask1Fragment.newInstance(new OnNewTaskListener(), task);
+            EditTask1Fragment fragment = EditTask1Fragment.newInstance(new OnNewTaskListener(), new TaskList.Task());
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.new_task_form_container, formFragment)
+                    .add(R.id.new_task_form_container, fragment)
                     .commit();
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            // This ID represents the Home or Up button. In the case of this
+            // activity, the Up button is shown. For
+            // more details, see the Navigation pattern on Android Design:
+            //
+            // http://developer.android.com/design/patterns/navigation.html#up-vs-back
+            //
+            navigateUpTo(new Intent(this, TaskListActivity.class));
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     protected class OnNewTaskListener implements cc.uah.es.todomanager.OnEditTaskListener {
 
         @Override
         public void onNextStep(TaskList.Task task) {
-// Todo
+                EditTask2Fragment fragment = EditTask2Fragment.newInstance(task, new OnNewTaskListener());
+getSupportFragmentManager().beginTransaction()
+        .replace(R.id.new_task_form_container, fragment)
+        .commit();
         }
 
         @Override
         public void onPreviousStep(TaskList.Task task) {
+            EditTask1Fragment fragment = EditTask1Fragment.newInstance(new OnNewTaskListener(), new TaskList.Task());
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.new_task_form_container, formFragment)
+                    .replace(R.id.new_task_form_container, fragment)
                     .commit();
         }
 

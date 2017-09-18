@@ -1,0 +1,47 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="cc.uah.es.todomanager.EditTask2Fragment">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/task_deadline"
+        android:labelFor="@+id/task_deadline" />
+
+    <DatePicker
+        android:id="@+id/task_deadline"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:datePickerMode="calendar" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/finish_button"
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:text="@string/finish_button"
+            style="@android:style/Widget.Material.Button"/>
+
+        <Button
+            android:id="@+id/previous_button"
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:text="@string/previous_button"
+            style="@android:style/Widget.Material.Button"/>
+
+        <Button
+            android:id="@+id/cancel_button"
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:text="@string/cancel_button"
+            style="@android:style/Widget.Material.Button"/>
+
+    </LinearLayout>
+
+</LinearLayout>

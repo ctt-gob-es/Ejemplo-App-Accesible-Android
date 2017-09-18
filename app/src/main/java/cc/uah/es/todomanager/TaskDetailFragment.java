@@ -131,6 +131,7 @@ public class TaskDetailFragment extends Fragment implements CompleteTaskDialog.C
         if (!(mItem.getStatus() instanceof TaskList.PendingTask)) {
             menu.removeItem(R.id.complete_button);
             menu.removeItem(R.id.cancel_button);
+            menu.removeItem(R.id.edit_task_option);
         }
     }
 
