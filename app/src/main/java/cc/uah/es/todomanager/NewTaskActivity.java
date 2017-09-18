@@ -1,5 +1,6 @@
 package cc.uah.es.todomanager;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -7,7 +8,7 @@ import android.support.v7.widget.Toolbar;
 import cc.uah.es.todomanager.domain.TaskList;
 
 public class NewTaskActivity extends AppCompatActivity   {
-
+    public static final int ACTIVITY_CODE = 2;
     private TaskList.Task task;
     private EditTask1Fragment formFragment;
 
@@ -44,7 +45,7 @@ public class NewTaskActivity extends AppCompatActivity   {
 
         @Override
         public void onNextStep(TaskList.Task task) {
-
+// Todo
         }
 
         @Override
@@ -62,7 +63,9 @@ public class NewTaskActivity extends AppCompatActivity   {
 
         @Override
         public void onFinish(TaskList.Task task) {
-
+            TaskList.getInstance().addTask(task);
+setResult(EditTask1Fragment.TASK_CREATION_COMPLETED);
+            finish();
         }
     }
 }

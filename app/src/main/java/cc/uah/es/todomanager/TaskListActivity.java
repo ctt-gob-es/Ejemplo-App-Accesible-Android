@@ -78,7 +78,7 @@ public class TaskListActivity extends AppCompatActivity implements CompleteTaskD
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(new ArrayList<TaskList.Task>(TaskList.getInstance().getTasks())));
+        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(TaskList.getInstance().getTasks()));
     }
 
     public class SimpleItemRecyclerViewAdapter
@@ -218,13 +218,30 @@ cancelTask(holder.mItem, position);
         } else {
             Context context = v.getContext();
             Intent intent = new Intent(context, NewTaskActivity.class);
-                    startActivityForResult(intent, EditTask1Fragment.ACTIVITY_CODE);
+                    startActivityForResult(intent, NewTaskActivity.ACTIVITY_CODE);
         }
     }
 
     protected void notifyTaskChanged(int position) {
         RecyclerView list = (RecyclerView) findViewById(R.id.task_list);
         list.getAdapter().notifyItemChanged(position);
+    }
+
+    protected void notifyTaskListChanged() {
+        RecyclerView list = (RecyclerView) findViewById(R.id.task_list);
+        list.getAdapter().notifyDataSetChanged();
+    }
+
+    protected void notifyItemInserted() {
+        RecyclerView list = (RecyclerView) findViewById(R.id.task_list);
+        list.getAdapter().notifyItemInserted(TaskList.getInstance().getTasks().size());
+    }
+
+    protected void addTask() {
+        // notifyTaskListChanged();
+        notifyItemInserted();
+        Toast toast = Toast.makeText(getApplicationContext(), R.string.task_added, Toast.LENGTH_SHORT);
+        toast.show();
     }
 
     @Override
@@ -250,8 +267,11 @@ notifyTaskChanged(position);
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case TaskDetailActivity.ACTIVITY_CODE:
-                if (resultCode == TaskDetailActivity.CHANGED) onTaskChanged(data.getExtras().getInt(TaskDetailFragment.ARG_ITEM_POS));
+                if (resultCode == TaskDetailActivity.CHANGED) notifyTaskChanged(data.getExtras().getInt(TaskDetailFragment.ARG_ITEM_POS));
                 break;
+            case NewTaskActivity.ACTIVITY_CODE:
+                if (resultCode == EditTask1Fragment.TASK_CREATION_COMPLETED) addTask();
+                    break;
         }
     }
 
@@ -274,7 +294,8 @@ notifyTaskChanged(position);
 
         @Override
         public void onFinish(TaskList.Task task) {
-
+TaskList.getInstance().addTask(task);
+            addTask();
         }
 
     }

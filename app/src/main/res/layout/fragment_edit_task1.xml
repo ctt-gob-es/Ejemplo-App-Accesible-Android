@@ -24,6 +24,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/text_margin"
+    android:text="@string/task_priority"
     android:labelFor="@+id/task_priority"/>
 
     <Spinner
@@ -73,20 +74,21 @@
             android:layout_width="wrap_content"
             android:layout_height="36dp"
             android:text="@string/finish_button"
-            android:onClick="onFinishPressed"/>
+            style="@android:style/Widget.Material.Button"/>
 
         <Button
             android:id="@+id/next_button"
             android:layout_width="wrap_content"
             android:layout_height="36dp"
             android:text="@string/next_button"
-            android:onClick="onNextPressed"/>
+            style="@android:style/Widget.Material.Button"/>
+
         <Button
             android:id="@+id/cancel_button"
             android:layout_width="wrap_content"
             android:layout_height="36dp"
             android:text="@string/cancel_button"
-            android:onClick="onCancelPressed"/>
+            style="@android:style/Widget.Material.Button"/>
 
     </LinearLayout>
     </LinearLayout>

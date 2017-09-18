@@ -37,4 +37,5 @@
     <string name="title_activity_new_task">NewTaskActivity</string>
     <string name="task_is_complex">Is complex</string>
     <string name="task_has_deadline">Has deadline</string>
+    <string name="task_added">The task has been added to your pending list.</string>
 </resources>

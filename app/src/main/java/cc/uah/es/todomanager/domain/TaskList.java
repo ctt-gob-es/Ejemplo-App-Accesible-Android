@@ -1,7 +1,9 @@
 package cc.uah.es.todomanager.domain;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Date;
         import java.util.Calendar;
@@ -9,12 +11,14 @@ import java.util.Date;
 public class TaskList {
 
     private Map<Long, Task> tasks;
+    private List<Task> taskList;
     private long idSerial   ;
     private static TaskList instance;
     private static boolean isInitialized = false;
 
     private TaskList() {
         tasks = new HashMap<Long, Task>(10);
+        taskList = new ArrayList<Task>();
         idSerial = 0;
     }
 
@@ -28,8 +32,8 @@ public class TaskList {
         return instance;
     }
 
-    public Collection<Task> getTasks() {
-        return tasks.values();
+    public List<Task> getTasks() {
+        return taskList;
     }
 
     public Task getTask(long id) {
@@ -37,7 +41,13 @@ public class TaskList {
     }
 
     public void addTask(String name, String details, String priority, Date deadline, boolean complex) {
-tasks.put(idSerial, new Task(idSerial++, name, details, priority, deadline, complex));
+        Task t = new Task(idSerial, name, details, priority, deadline, complex);
+tasks.put(idSerial++, t);
+        taskList.add(t);
+    }
+
+    public void addTask(Task task) {
+        addTask(task.getName(), task.getDetails(), task.getPriority(), task.getDeadline(), task.isComplex());
     }
 
     /**

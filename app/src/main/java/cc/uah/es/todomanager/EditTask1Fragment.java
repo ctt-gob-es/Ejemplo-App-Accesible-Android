@@ -7,10 +7,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.CalendarView;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Spinner;
+
+import java.util.Calendar;
 
 import cc.uah.es.todomanager.domain.TaskList;
 
@@ -24,7 +28,6 @@ import cc.uah.es.todomanager.domain.TaskList;
  * create an instance of this fragment.
  */
 public class EditTask1Fragment extends Fragment {
-    public static final int ACTIVITY_CODE = 2;
     public static final int TASK_CREATION_COMPLETED = 1;
     public static final int TASK_CREATION_CANCELED = 0;
 
@@ -82,10 +85,10 @@ public class EditTask1Fragment extends Fragment {
         return  rootView;
     }
 
-    protected void loadTaskData(View a) {
-        // View a = getView();
+    protected void loadTaskData(View view) {
+        final View a = view;
         ((EditText) a.findViewById(R.id.task_name)).setText(task.getName());
-        /* Spinner prioritySp = ((Spinner) a.findViewById(R.id.task_priority));
+        Spinner prioritySp = ((Spinner) a.findViewById(R.id.task_priority));
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(), R.array.priority_options, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         prioritySp.setAdapter(adapter);
@@ -112,12 +115,35 @@ finishButton.setVisibility(View.VISIBLE);
                 }
             }
         });
-        if (hasDeadline) deadlineChk.setChecked(false);
-        else deadlineChk.setChecked(true);
-        */
+        if (hasDeadline) {
+            deadlineChk.setChecked(true);
+            ((View) a.findViewById(R.id.finish_button)).setVisibility(View.INVISIBLE);
+        } else {
+            deadlineChk.setChecked(false);
+            ((View) a.findViewById(R.id.next_button)).setVisibility(View.INVISIBLE);
+        }
+        ((Button) a.findViewById(R.id.finish_button)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onFinishPressed(v);
+            }
+        });
+        ((Button) a.findViewById(R.id.next_button)).setOnClickListener((new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onNextPressed(v);
+            }
+        }));
+        ((Button) a.findViewById(R.id.cancel_button)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onCancelPressed(v);
+            }
+        });
     }
 
     public void onNextPressed(View view) {
+        updateTask(task);
         listener.onNextStep(task);
     }
 
@@ -126,7 +152,23 @@ finishButton.setVisibility(View.VISIBLE);
     }
 
     public void onFinishPressed(View view) {
-listener.onFinish(task);
+updateTask(task);
+        listener.onFinish(task);
+    }
+
+    protected void updateTask(TaskList.Task task) {
+        View v = getView();
+        task.setName(((EditText) v.findViewById(R.id.task_name)).getText().toString());
+        task.setDetails(((EditText) v.findViewById(R.id.task_description)).getText().toString());
+task.setComplex(((CheckBox) v.findViewById(R.id.task_is_complex)).isChecked());
+        if (((CheckBox) v.findViewById(R.id.task_has_deadline)).isChecked())
+            task.setDeadline(Calendar.getInstance().getTime());
+        else task.setDeadline(null);
+        switch (((Spinner) v.findViewById(R.id.task_priority)).getSelectedItemPosition()) {
+            case 0: task.setPriority(TaskList.Task.HIGH_PRIORITY); break;
+            case 1: task.setPriority(TaskList.Task.MEDIUM_PRIORITY); break;
+            case 2: task.setPriority(TaskList.Task.LOW_PRIORITY);
+        }
     }
 
 }
