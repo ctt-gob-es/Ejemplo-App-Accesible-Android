@@ -1,6 +1,7 @@
 package cc.uah.es.todomanager;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.icu.text.DateFormat;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.os.Bundle;
@@ -27,6 +28,7 @@ public class TaskDetailFragment extends Fragment implements CompleteTaskDialog.C
      * The fragment argument representing the item ID that this fragment
      * represents.
      */
+    public  static  final  String TAG = "es.uah.cc.todomanager.TaskDetailFragment";
     public static final String ARG_ITEM_ID = "cc.uah.es.todomanager.item_id";
     public static final String ARG_ITEM_POS = "cc.uah.es.todomanager.item_ps";
 
@@ -36,12 +38,28 @@ public class TaskDetailFragment extends Fragment implements CompleteTaskDialog.C
     private TaskList.Task mItem;
     private int position;
     private OnTaskChangedListener listener = null;
+    private OnEditButtonListener editButtonListener;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
     public TaskDetailFragment() {
+    }
+
+    public static TaskDetailFragment newInstance(OnTaskChangedListener taskChangedListener, OnEditButtonListener editButtonListener) {
+TaskDetailFragment fragment = new TaskDetailFragment();
+        fragment.setOnTaskChangedListener(taskChangedListener);
+        fragment.setEditButtonListener(editButtonListener);
+        return fragment;
+    }
+
+    public OnEditButtonListener getEditButtonListener() {
+        return editButtonListener;
+    }
+
+    public void setEditButtonListener(OnEditButtonListener editButtonListener) {
+        this.editButtonListener = editButtonListener;
     }
 
     @Override
@@ -68,56 +86,64 @@ public class TaskDetailFragment extends Fragment implements CompleteTaskDialog.C
 
         // Show the dummy content as text in a TextView.
         if (mItem != null) {
-            ((TextView) rootView.findViewById(R.id.task_name)).append(" " + mItem.getName());
-            int p = R.string.medium_priority;
-            switch (mItem.getPriority()) {
-                case TaskList.Task.HIGH_PRIORITY: p = R.string.high_priority; break;
-                case TaskList.Task.MEDIUM_PRIORITY: p = R.string.medium_priority; break;
-                case TaskList.Task.LOW_PRIORITY: p = R.string.low_priority; break;
-            }
-            ((TextView) rootView.findViewById(R.id.task_priority)).append(" " + getResources().getString(p));
-            int s = R.string.pending_task;
-            switch (mItem.getStatus().getStatusDescription()) {
-                case TaskList.PendingTask.STATUS: s = R.string.pending_task; break;
-                case TaskList.CompletedTask.STATUS: s = R.string.completed_task; break;
-                case TaskList.CanceledTask.STATUS: s = R.string.canceled_task; break;
-            }
-            ((TextView) rootView.findViewById(R.id.task_status)).append(" " + getResources().getString(s));
-            ((TextView) rootView.findViewById(R.id.task_description)).append("\n" + mItem.getDetails());
-            if (mItem.getDeadline() != null) ((TextView) rootView.findViewById(R.id.task_deadline)).append(" " + DateFormat.getDateInstance(DateFormat.SHORT).format(mItem.getDeadline()));
-            else ((View) rootView.findViewById(R.id.task_deadline)).setVisibility(View.INVISIBLE);
-            if (mItem.isComplex()) {
-                SeekBar bar = (SeekBar) rootView.findViewById(R.id.task_progress);
-                bar.setProgress(mItem.getCompleted());
-                bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                    @Override
-                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                        mItem.setCompleted(progress);
-                        if (progress == 100) completeTask();
-                        listener.onTaskChanged(position);
-                    }
-
-                    @Override
-                    public void onStartTrackingTouch(SeekBar seekBar) {
-
-                    }
-
-                    @Override
-                    public void onStopTrackingTouch(SeekBar seekBar) {
-
-                    }
-                });
-
-            }
-            else {
-                ((View) rootView.findViewById(R.id.task_progress)).setVisibility(View.INVISIBLE);
-                ((View) rootView.findViewById(R.id.task_completion)).setVisibility(View.INVISIBLE);
-            }
+fillData(rootView);
+showProgressIfComplex(rootView);
         }
 
         setHasOptionsMenu(true);
 
         return rootView;
+    }
+protected  void fillData(View rootView) {
+    ((TextView) rootView.findViewById(R.id.task_name)).setText(getResources().getString(R.string.task_name) + " " + mItem.getName());
+    int p = R.string.medium_priority;
+    switch (mItem.getPriority()) {
+        case TaskList.Task.HIGH_PRIORITY: p = R.string.high_priority; break;
+        case TaskList.Task.MEDIUM_PRIORITY: p = R.string.medium_priority; break;
+        case TaskList.Task.LOW_PRIORITY: p = R.string.low_priority; break;
+    }
+    ((TextView) rootView.findViewById(R.id.task_priority)).setText(getResources().getString(R.string.task_priority) + " " + getResources().getString(p));
+    int s = R.string.pending_task;
+    switch (mItem.getStatus().getStatusDescription()) {
+        case TaskList.PendingTask.STATUS: s = R.string.pending_task; break;
+        case TaskList.CompletedTask.STATUS: s = R.string.completed_task; break;
+        case TaskList.CanceledTask.STATUS: s = R.string.canceled_task; break;
+    }
+    ((TextView) rootView.findViewById(R.id.task_status)).setText(getResources().getString(R.string.task_status) + " " + getResources().getString(s));
+    ((TextView) rootView.findViewById(R.id.task_description)).setText(getResources().getString(R.string.task_description) + "\n" + mItem.getDetails());
+    if (mItem.getDeadline() != null) ((TextView) rootView.findViewById(R.id.task_deadline)).setText(getResources().getString(R.string.task_deadline) + " " + DateFormat.getDateInstance(DateFormat.SHORT).format(mItem.getDeadline()));
+    else ((View) rootView.findViewById(R.id.task_deadline)).setVisibility(View.INVISIBLE);
+}
+
+
+    protected  void showProgressIfComplex(View rootView) {
+        if (mItem.isComplex()) {
+            SeekBar bar = (SeekBar) rootView.findViewById(R.id.task_progress);
+            bar.setProgress(mItem.getCompleted());
+            bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                    mItem.setCompleted(progress);
+                    if (progress == 100) completeTask();
+                    listener.onTaskChanged(position);
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+
+                }
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+
+                }
+            });
+
+        }
+        else {
+            ((View) rootView.findViewById(R.id.task_progress)).setVisibility(View.INVISIBLE);
+            ((View) rootView.findViewById(R.id.task_completion)).setVisibility(View.INVISIBLE);
+        }
     }
 
     @Override
@@ -159,8 +185,19 @@ public class TaskDetailFragment extends Fragment implements CompleteTaskDialog.C
         }
     }
 
-    protected void editTask() {
+    public void updateTask(TaskList.Task task) {
+        mItem = task;
+        updateTask();
+    }
 
+    public void updateTask () {
+        fillData(getView());
+        showProgressIfComplex(getView());
+        listener.onTaskChanged(position);
+    }
+
+    protected void editTask() {
+editButtonListener.init(mItem);
     }
 
     protected void completeTask() {

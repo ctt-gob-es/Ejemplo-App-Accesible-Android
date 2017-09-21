@@ -15,6 +15,6 @@ import cc.uah.es.todomanager.domain.TaskList;
 public interface OnEditTaskListener {
     void onNextStep(TaskList.Task task);
     void onPreviousStep(TaskList.Task task);
-    void onCancel();
+    void onCancel(TaskList.Task task);
     void onFinish(TaskList.Task task);
 }

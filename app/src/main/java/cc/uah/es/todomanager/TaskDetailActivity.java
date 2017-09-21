@@ -11,6 +11,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
 
+import cc.uah.es.todomanager.domain.TaskList;
+
 /**
  * An activity representing a single Task detail screen. This
  * activity is only used narrow width devices. On tablet-size devices,
@@ -24,6 +26,7 @@ public class TaskDetailActivity extends AppCompatActivity implements OnTaskChang
     public final static int NOT_CHANGED = 0;
     private boolean changed = false;
     private int position;
+    private TaskDetailFragment fragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,9 +58,8 @@ public class TaskDetailActivity extends AppCompatActivity implements OnTaskChang
                     getIntent().getLongExtra(TaskDetailFragment.ARG_ITEM_ID, -1));
             position = getIntent().getIntExtra(TaskDetailFragment.ARG_ITEM_POS, -1);
             arguments.putInt(TaskDetailFragment.ARG_ITEM_POS, position);
-            TaskDetailFragment fragment = new TaskDetailFragment();
+            fragment = TaskDetailFragment.newInstance(this, new OnDetailsEditButtonListener());
             fragment.setArguments(arguments);
-            fragment.setOnTaskChangedListener(this);
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.task_detail_container, fragment)
                     .commit();
@@ -92,6 +94,25 @@ public class TaskDetailActivity extends AppCompatActivity implements OnTaskChang
         int result = changed ? CHANGED : NOT_CHANGED;
         setResult(result, resultIntent);
         finish();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == EditTaskActivity.ACTIVITY_CODE) {
+            if (resultCode == EditTask1Fragment.TASK_EDITION_COMPLETED) {
+                TaskList.Task t = TaskList.getInstance().getTask(data.getLongExtra(TaskDetailFragment.ARG_ITEM_ID, -1));
+fragment.updateTask(t);
+            }
+        }
+    }
+
+    protected  class OnDetailsEditButtonListener implements OnEditButtonListener {
+        @Override
+        public void init(TaskList.Task task) {
+            Intent intent = new Intent(getApplicationContext(), EditTaskActivity.class);
+            intent.putExtra(TaskDetailFragment.ARG_ITEM_ID, task.getId());
+            startActivityForResult(intent, EditTaskActivity.ACTIVITY_CODE);
+        }
     }
 }
 

@@ -29,8 +29,11 @@ import cc.uah.es.todomanager.domain.TaskList;
  * create an instance of this fragment.
  */
 public class EditTask1Fragment extends Fragment {
+    public static final String TAG = "es.uah.cc.todomanager.EditTask1Fragment";
     public static final int TASK_CREATION_COMPLETED = 1;
+    public static final int TASK_EDITION_COMPLETED = 2;
     public static final int TASK_CREATION_CANCELED = 0;
+    public static  final  int TASK_EDITION_CANCELED = -1;
 
     private OnEditTaskListener listener;
     private TaskList.Task task;
@@ -153,7 +156,7 @@ finishButton.setVisibility(View.VISIBLE);
     }
 
     public void onCancelPressed(View view) {
-        listener.onCancel();
+        listener.onCancel(task);
     }
 
     public void onFinishPressed(View view) {

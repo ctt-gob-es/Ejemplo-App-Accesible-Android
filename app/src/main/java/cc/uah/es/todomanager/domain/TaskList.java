@@ -40,6 +40,15 @@ public class TaskList {
         return tasks.get(id);
     }
 
+    public boolean setTask(Task task) {
+        if (tasks.containsKey(task.getId())) {
+            tasks.put(task.getId(), task);
+            taskList.set(taskList.indexOf(task), task);
+            return true;
+        }
+        else return false;
+    }
+
     public void addTask(String name, String details, String priority, Date deadline, boolean complex) {
         Task t = new Task(idSerial, name, details, priority, deadline, complex);
 tasks.put(idSerial++, t);
@@ -188,6 +197,13 @@ priority = MEDIUM_PRIORITY;
         @Override
         public int hashCode() {
             return (int) (id ^ (id >>> 32));
+        }
+
+        public Task clone() {
+            Task t = new Task(id, name, details, priority, deadline, complex);
+            t.setCompleted(completed);
+            t.setStatus(status);
+            return t;
         }
 
         @Override

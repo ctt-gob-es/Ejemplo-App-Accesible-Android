@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -40,7 +41,7 @@ public class TaskListActivity extends AppCompatActivity implements CompleteTaskD
      * device.
      */
     private boolean mTwoPane;
-    private Fragment currentFragment;
+    private Bundle fragments;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +53,7 @@ public class TaskListActivity extends AppCompatActivity implements CompleteTaskD
         toolbar.setTitle(getTitle());
 
         TaskList.fillSampleData(TaskList.getInstance());
+        fragments = new Bundle();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -196,10 +198,10 @@ cancelTask(holder.mItem, position);
             Bundle arguments = new Bundle();
             arguments.putLong(TaskDetailFragment.ARG_ITEM_ID, task.getId());
             arguments.putInt(TaskDetailFragment.ARG_ITEM_POS, position);
-            TaskDetailFragment fragment = new TaskDetailFragment();
+            TaskDetailFragment fragment = TaskDetailFragment.newInstance(this, new OnListEditButtonListener());
             fragment.setArguments(arguments);
-            fragment.setOnTaskChangedListener(this);
             getSupportFragmentManager().beginTransaction()
+                    .addToBackStack(TaskDetailFragment.TAG)
                     .replace(R.id.task_detail_container, fragment)
                     .commit();
         } else {
@@ -216,6 +218,7 @@ cancelTask(holder.mItem, position);
         if (mTwoPane) {
             EditTask1Fragment fragment = EditTask1Fragment.newInstance(new OnNewTaskListener(), new TaskList.Task());
             getSupportFragmentManager().beginTransaction()
+                    .addToBackStack(EditTask1Fragment.TAG)
                     .replace(R.id.task_detail_container, fragment)
                     .commit();
         } else {
@@ -241,7 +244,6 @@ cancelTask(holder.mItem, position);
     }
 
     protected void addTask() {
-        // notifyTaskListChanged();
         notifyItemInserted();
         Toast toast = Toast.makeText(getApplicationContext(), R.string.task_added, Toast.LENGTH_SHORT);
         toast.show();
@@ -278,42 +280,76 @@ notifyTaskChanged(position);
         }
     }
 
-    protected  class  OnNewTaskListener implements  OnEditTaskListener {
+    protected  class  OnNewTaskListener implements OnEditTaskListener {
 
         @Override
         public void onNextStep(TaskList.Task task) {
-currentFragment = EditTask2Fragment.newInstance(task, new OnNewTaskListener());
+Fragment fragment = EditTask2Fragment.newInstance(task, new OnNewTaskListener());
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.task_detail_container, currentFragment)
+                    .addToBackStack(EditTask2Fragment.TAG)
+                    .replace(R.id.task_detail_container, fragment)
                     .commit();
         }
 
         @Override
         public void onPreviousStep(TaskList.Task task) {
-currentFragment = EditTask1Fragment.newInstance(new OnNewTaskListener(), new TaskList.Task());
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.task_detail_container, currentFragment)
-                    .commit();
+getSupportFragmentManager().popBackStack(EditTask2Fragment.TAG, 0);
         }
 
         @Override
-        public void onCancel() {
-getSupportFragmentManager().beginTransaction()
-        .remove(currentFragment)
-        .commit();
-            currentFragment = null;
+        public void onCancel(TaskList.Task task) {
+            getSupportFragmentManager().popBackStack(EditTask1Fragment.TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         }
 
         @Override
         public void onFinish(TaskList.Task task) {
 TaskList.getInstance().addTask(task);
             addTask();
-            getSupportFragmentManager().beginTransaction()
-                    .remove(currentFragment)
-                    .commit();
-            currentFragment = null;
+            getSupportFragmentManager().popBackStack(EditTask1Fragment.TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            viewTask(task, TaskList.getInstance().getTasks().size(), null);
         }
 
     }
+
+    protected class  OnUpdateTaskListener implements cc.uah.es.todomanager.OnEditTaskListener {
+
+        @Override
+        public void onNextStep(TaskList.Task task) {
+            Fragment fragment = EditTask2Fragment.newInstance(task, new OnUpdateTaskListener());
+            getSupportFragmentManager().beginTransaction()
+                    .addToBackStack(EditTask2Fragment.TAG)
+                    .replace(R.id.task_detail_container, fragment)
+                    .commit();
+        }
+
+        @Override
+        public void onPreviousStep(TaskList.Task task) {
+            getSupportFragmentManager().popBackStack(EditTask2Fragment.TAG, 0);
+        }
+
+        @Override
+        public void onCancel(TaskList.Task task) {
+            getSupportFragmentManager().popBackStack(EditTask1Fragment.TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        }
+
+        @Override
+        public void onFinish(TaskList.Task task) {
+TaskList.getInstance().setTask(task);
+            getSupportFragmentManager().popBackStack(EditTask1Fragment.TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            TaskDetailFragment fragment = (TaskDetailFragment) getSupportFragmentManager().getFragment(fragments, TaskDetailFragment.TAG);
+            fragment.updateTask(task);
+        }
+    }
+
+protected class OnListEditButtonListener implements  OnEditButtonListener {
+    @Override
+    public void init(TaskList.Task task) {
+        EditTask1Fragment fragment = EditTask1Fragment.newInstance(new OnUpdateTaskListener(), task.clone());
+        getSupportFragmentManager().beginTransaction()
+                .addToBackStack(EditTask1Fragment.TAG)
+                .replace(R.id.task_detail_container, fragment)
+.commit();
+    }
+}
 }
 

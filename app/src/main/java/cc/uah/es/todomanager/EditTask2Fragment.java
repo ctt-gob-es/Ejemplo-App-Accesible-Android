@@ -24,6 +24,7 @@ import cc.uah.es.todomanager.domain.TaskList;
  */
 public class EditTask2Fragment extends Fragment {
 
+    public static final String TAG = "es.uah.cc.todomanager.EditTask2Fragment";
     private TaskList.Task task;
     private OnEditTaskListener listener;
 
@@ -122,7 +123,7 @@ protected void onFinishPressed(View v) {
 }
 
 protected void onCancelPressed(View v) {
-    listener.onCancel();
+    listener.onCancel(task);
 }
 
 protected  void  onPreviousPressed(View v) {
