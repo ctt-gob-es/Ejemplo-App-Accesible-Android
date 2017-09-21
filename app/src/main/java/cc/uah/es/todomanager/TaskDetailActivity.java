@@ -26,6 +26,7 @@ public class TaskDetailActivity extends AppCompatActivity implements OnTaskChang
     public final static int NOT_CHANGED = 0;
     private boolean changed = false;
     private int position;
+    private TaskList.Task task;
     private TaskDetailFragment fragment;
 
     @Override
@@ -54,8 +55,8 @@ public class TaskDetailActivity extends AppCompatActivity implements OnTaskChang
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
             Bundle arguments = new Bundle();
-            arguments.putLong(TaskDetailFragment.ARG_ITEM_ID,
-                    getIntent().getLongExtra(TaskDetailFragment.ARG_ITEM_ID, -1));
+            TaskList.Task task = getIntent().getParcelableExtra(TaskListActivity.ARG_TASK);
+            arguments.putParcelable(TaskListActivity.ARG_TASK, task);
             position = getIntent().getIntExtra(TaskDetailFragment.ARG_ITEM_POS, -1);
             arguments.putInt(TaskDetailFragment.ARG_ITEM_POS, position);
             fragment = TaskDetailFragment.newInstance(this, new OnDetailsEditButtonListener());
@@ -83,14 +84,16 @@ public class TaskDetailActivity extends AppCompatActivity implements OnTaskChang
     }
 
     @Override
-    public void onTaskChanged(int position) {
+    public void onTaskChanged(TaskList.Task task, int position) {
         changed = true;
+        this.task = task;
     }
 
     @Override
     public void onBackPressed() {
         Intent resultIntent = new Intent();
         resultIntent.putExtra(TaskDetailFragment.ARG_ITEM_POS, position);
+        resultIntent.putExtra(TaskListActivity.ARG_TASK, task);
         int result = changed ? CHANGED : NOT_CHANGED;
         setResult(result, resultIntent);
         finish();

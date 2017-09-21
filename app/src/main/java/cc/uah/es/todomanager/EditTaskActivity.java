@@ -60,7 +60,7 @@ public class EditTaskActivity extends AppCompatActivity {
 
         @Override
         public void onNextStep(TaskList.Task task) {
-            EditTask2Fragment fragment = EditTask2Fragment.newInstance(task, new OnEditTaskListener());
+            EditTask2Fragment fragment = EditTask2Fragment.newInstance(new OnEditTaskListener(), task);
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.new_task_form_container, fragment)
                     .commit();

@@ -2,6 +2,7 @@ package cc.uah.es.todomanager.domain;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -229,7 +230,15 @@ dest.writeLong(id);
             dest.writeBooleanArray(temp);
             dest.writeInt(completed);
             dest.writeString(status.getStatusDescription());
-            if (deadline != null) dest.writeLong(deadline.getTime());
+            long[] timestamp = new long[2];
+            if (deadline != null) {
+                timestamp[0] = 1;
+                timestamp[1] = deadline.getTime();
+            } else  {
+timestamp[0] = 0;
+                timestamp[1] = 0;
+            }
+            dest.writeLongArray(timestamp);
         }
 
         protected void readFromParcel(Parcel in) {
@@ -247,10 +256,9 @@ dest.writeLong(id);
                 case CompletedTask.STATUS: status = new CompletedTask(); break;
                 case CanceledTask.STATUS: status = new CanceledTask();
             }
-            if (in.dataAvail() > 0) {
-                long timestamp = in.readLong();
-                deadline = new Date(timestamp);
-            }
+                long[] timestamp = new long[2];
+            in.readLongArray(timestamp);
+                if (timestamp[0] == 1) deadline = new Date(timestamp[1]);
             else deadline = null;
         }
 

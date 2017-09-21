@@ -32,16 +32,8 @@ public class EditTask2Fragment extends Fragment {
         // Required empty public constructor
     }
 
-    public TaskList.Task getTask() {
-        return task;
-    }
-
     public OnEditTaskListener getOnEditTaskListener() {
         return listener;
-    }
-
-    public void setTask(TaskList.Task task) {
-        this.task = task;
     }
 
     public void setOnEditTaskListener(OnEditTaskListener listener) {
@@ -56,10 +48,11 @@ public class EditTask2Fragment extends Fragment {
      * @param param2 Parameter 2.
      * @return A new instance of fragment EditTask2Fragment.
      */
-    // TODO: Rename and change types and number of parameters
-    public static EditTask2Fragment newInstance(TaskList.Task task, OnEditTaskListener listener) {
+    public static EditTask2Fragment newInstance(OnEditTaskListener listener, TaskList.Task task) {
         EditTask2Fragment fragment = new EditTask2Fragment();
-        fragment.setTask(task);
+        Bundle args = new Bundle();
+        args.putParcelable(NewTaskActivity.ARG_NEW_TASK2, task);
+        fragment.setArguments(args);
         fragment.setOnEditTaskListener(listener);
         return fragment;
     }
@@ -71,6 +64,10 @@ public class EditTask2Fragment extends Fragment {
         CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
         if (appBarLayout != null) {
             appBarLayout.setTitle(getResources().getString(R.string.title_edit_task_2));
+        }
+
+        if (savedInstanceState == null) {
+            task = getArguments().getParcelable(TaskListActivity.ARG_TASK);
         }
     }
 

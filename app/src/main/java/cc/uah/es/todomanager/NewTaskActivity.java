@@ -10,7 +10,8 @@ import cc.uah.es.todomanager.domain.TaskList;
 
 public class NewTaskActivity extends AppCompatActivity   {
     public static final int ACTIVITY_CODE = 2;
-
+    public static final String ARG_NEW_TASK1 = "cc.uah.es.todomanager.newtask1";
+    public static final String ARG_NEW_TASK2 = "cc.uah.es.todomanager.newtas2";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,7 +60,7 @@ public class NewTaskActivity extends AppCompatActivity   {
 
         @Override
         public void onNextStep(TaskList.Task task) {
-                EditTask2Fragment fragment = EditTask2Fragment.newInstance(task, new OnNewTaskListener());
+                EditTask2Fragment fragment = EditTask2Fragment.newInstance(new OnNewTaskListener(), task);
 getSupportFragmentManager().beginTransaction()
         .replace(R.id.new_task_form_container, fragment)
         .commit();
@@ -81,8 +82,9 @@ getSupportFragmentManager().beginTransaction()
 
         @Override
         public void onFinish(TaskList.Task task) {
-            TaskList.getInstance().addTask(task);
-setResult(EditTask1Fragment.TASK_CREATION_COMPLETED);
+            Intent intent = new Intent();
+            intent.putExtra(TaskListActivity.ARG_TASK, task);
+setResult(EditTask1Fragment.TASK_CREATION_COMPLETED, intent);
             finish();
         }
     }

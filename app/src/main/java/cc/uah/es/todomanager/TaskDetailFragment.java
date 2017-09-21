@@ -66,9 +66,9 @@ TaskDetailFragment fragment = new TaskDetailFragment();
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (getArguments().containsKey(ARG_ITEM_ID)) {
+        if (getArguments().containsKey(TaskListActivity.ARG_TASK)) {
             // Load the task.
-            mItem = TaskList.getInstance().getTask(getArguments().getLong(ARG_ITEM_ID));
+            mItem = (TaskList.Task) getArguments().getParcelable(TaskListActivity.ARG_TASK);
             position = getArguments().getInt(ARG_ITEM_POS);
 
             Activity activity = this.getActivity();
@@ -125,7 +125,7 @@ protected  void fillData(View rootView) {
                 public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                     mItem.setCompleted(progress);
                     if (progress == 100) completeTask();
-                    listener.onTaskChanged(position);
+                    listener.onTaskChanged(mItem, position);
                 }
 
                 @Override
@@ -162,16 +162,16 @@ protected  void fillData(View rootView) {
     }
 
     @Override
-    public void onComplete(int position) {
+    public void onComplete(TaskList.Task task, int position) {
         ((TextView) getView().findViewById(R.id.task_status)).setText(getResources().getString(R.string.task_status) + " " + getResources().getString(R.string.completed_task));
-        listener.onTaskChanged(position);
+        listener.onTaskChanged(task, position);
         getActivity().invalidateOptionsMenu();
     }
 
     @Override
-    public void onCancel(int position) {
+    public void onCancel(TaskList.Task task, int position) {
         ((TextView) getView().findViewById(R.id.task_status)).setText(getResources().getString(R.string.task_status) + " " + getResources().getString(R.string.canceled_task));
-        listener.onTaskChanged(position);
+        listener.onTaskChanged(task, position);
         getActivity().invalidateOptionsMenu();
     }
 
@@ -193,7 +193,7 @@ protected  void fillData(View rootView) {
     public void updateTask () {
         fillData(getView());
         showProgressIfComplex(getView());
-        listener.onTaskChanged(position);
+        listener.onTaskChanged(mItem, position);
     }
 
     protected void editTask() {
@@ -202,11 +202,17 @@ editButtonListener.init(mItem);
 
     protected void completeTask() {
         CompleteTaskDialog dialog = new CompleteTaskDialog(mItem, position, this);
+        Bundle args = new Bundle();
+        args.putParcelable(TaskListActivity.ARG_TASK, mItem);
+        dialog.setArguments(args);
         dialog.show(getFragmentManager(), "CompleteTask");
     }
 
     protected void cancelTask() {
         CancelTaskDialog dialog = new CancelTaskDialog(mItem, -1, this);
+        Bundle args = new Bundle();
+        args.putParcelable(TaskListActivity.ARG_TASK, mItem);
+        dialog.setArguments(args);
         dialog.show(getFragmentManager(), "CancelDialog");
     }
 

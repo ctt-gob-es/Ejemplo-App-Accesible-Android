@@ -42,27 +42,19 @@ public class EditTask1Fragment extends Fragment {
         // Required empty public constructor
     }
 
-    public TaskList.Task getTask() {
-        return task;
-    }
-
-    public void setTask(TaskList.Task task) {
-        this.task = task;
-    }
-
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided listener.
      *
      * @param listener A listener for on new task next step event.
-     *                 @param task A task for working on it.
      * @return A new instance of fragment EditTask1Fragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static EditTask1Fragment newInstance(OnEditTaskListener listener, TaskList.Task task) {
         EditTask1Fragment fragment = new EditTask1Fragment();
         fragment.setOnEditTaskListener(listener);
-        fragment.setTask(task);
+        Bundle args = new Bundle();
+args.putParcelable(NewTaskActivity.ARG_NEW_TASK1, task);
+        fragment.setArguments(args);
         return fragment;
     }
 
@@ -81,6 +73,10 @@ public class EditTask1Fragment extends Fragment {
         CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
         if (appBarLayout != null) {
             appBarLayout.setTitle(getResources().getString(R.string.title_edit_task_1));
+        }
+
+        if (savedInstanceState == null) {
+task = getArguments().getParcelable(TaskListActivity.ARG_TASK);
         }
     }
 

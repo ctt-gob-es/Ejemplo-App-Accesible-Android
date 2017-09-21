@@ -36,6 +36,7 @@ import java.util.List;
  */
 public class TaskListActivity extends AppCompatActivity implements CompleteTaskDialog.CompleteDialogListener, CancelTaskDialog.CancelDialogListener, OnTaskChangedListener {
 
+    public static  final String ARG_TASK = "cc.uah.es.todomanager.task";
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
      * device.
@@ -185,18 +186,24 @@ cancelTask(holder.mItem, position);
 
     protected void completeTask(TaskList.Task task, int position) {
         CompleteTaskDialog dialog = new CompleteTaskDialog(task, position, this);
+        Bundle args = new Bundle();
+        args.putParcelable(ARG_TASK, task);
+        dialog.setArguments(args);
         dialog.show(getSupportFragmentManager(), "CompleteTask");
     }
 
     protected void cancelTask (TaskList.Task task, int position) {
         CancelTaskDialog dialog = new CancelTaskDialog(task, position, this);
+        Bundle args = new Bundle();
+        args.putParcelable(ARG_TASK, task);
+        dialog.setArguments(args);
         dialog.show(getSupportFragmentManager(), "CancelDialog");
     }
 
     protected void viewTask(TaskList.Task task, int position, View v) {
         if (mTwoPane) {
             Bundle arguments = new Bundle();
-            arguments.putLong(TaskDetailFragment.ARG_ITEM_ID, task.getId());
+            arguments.putParcelable(ARG_TASK, task);
             arguments.putInt(TaskDetailFragment.ARG_ITEM_POS, position);
             TaskDetailFragment fragment = TaskDetailFragment.newInstance(this, new OnListEditButtonListener());
             fragment.setArguments(arguments);
@@ -207,7 +214,7 @@ cancelTask(holder.mItem, position);
         } else {
             Context context = v.getContext();
             Intent intent = new Intent(context, TaskDetailActivity.class);
-            intent.putExtra(TaskDetailFragment.ARG_ITEM_ID, task.getId());
+            intent.putExtra(ARG_TASK, task);
             intent.putExtra(TaskDetailFragment.ARG_ITEM_POS, position);
 
             startActivityForResult(intent, TaskDetailActivity.ACTIVITY_CODE);
@@ -250,32 +257,43 @@ cancelTask(holder.mItem, position);
     }
 
     @Override
-    public void onCancel(int position) {
+    public void onCancel(TaskList.Task task, int position) {
+        TaskList.getInstance().setTask(task);
         notifyTaskChanged(position);
         Toast toast = Toast.makeText(getApplicationContext(), R.string.task_canceled, Toast.LENGTH_SHORT);
         toast.show();
     }
 
     @Override
-    public void onComplete(int position) {
+    public void onComplete(TaskList.Task task, int position) {
+        TaskList.getInstance().setTask(task);
         notifyTaskChanged(position);
         Toast toast = Toast.makeText(getApplicationContext(), R.string.task_completed, Toast.LENGTH_SHORT);
         toast.show();
     }
 
     @Override
-    public void onTaskChanged(int position) {
-notifyTaskChanged(position);
+    public void onTaskChanged(TaskList.Task task, int position) {
+TaskList.getInstance().setTask(task);
+        notifyTaskChanged(position);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case TaskDetailActivity.ACTIVITY_CODE:
-                if (resultCode == TaskDetailActivity.CHANGED) notifyTaskChanged(data.getExtras().getInt(TaskDetailFragment.ARG_ITEM_POS));
+                if (resultCode == TaskDetailActivity.CHANGED) {
+                    TaskList.Task t = data.getParcelableExtra(ARG_TASK);
+                    TaskList.getInstance().setTask(t);
+                    notifyTaskChanged(data.getExtras().getInt(TaskDetailFragment.ARG_ITEM_POS));
+                }
                 break;
             case NewTaskActivity.ACTIVITY_CODE:
-                if (resultCode == EditTask1Fragment.TASK_CREATION_COMPLETED) addTask();
+                if (resultCode == EditTask1Fragment.TASK_CREATION_COMPLETED) {
+                    TaskList.Task t = data.getParcelableExtra(TaskListActivity.ARG_TASK);
+                    TaskList.getInstance().addTask(t);
+                    addTask();
+                }
                     break;
         }
     }
@@ -284,7 +302,7 @@ notifyTaskChanged(position);
 
         @Override
         public void onNextStep(TaskList.Task task) {
-Fragment fragment = EditTask2Fragment.newInstance(task, new OnNewTaskListener());
+Fragment fragment = EditTask2Fragment.newInstance(new OnNewTaskListener(), task);
             getSupportFragmentManager().beginTransaction()
                     .addToBackStack(EditTask2Fragment.TAG)
                     .replace(R.id.task_detail_container, fragment)
@@ -315,7 +333,7 @@ TaskList.getInstance().addTask(task);
 
         @Override
         public void onNextStep(TaskList.Task task) {
-            Fragment fragment = EditTask2Fragment.newInstance(task, new OnUpdateTaskListener());
+            Fragment fragment = EditTask2Fragment.newInstance(new OnUpdateTaskListener(), task);
             getSupportFragmentManager().beginTransaction()
                     .addToBackStack(EditTask2Fragment.TAG)
                     .replace(R.id.task_detail_container, fragment)

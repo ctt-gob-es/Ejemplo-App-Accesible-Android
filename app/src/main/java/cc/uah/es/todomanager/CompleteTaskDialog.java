@@ -32,13 +32,14 @@ public class CompleteTaskDialog extends android.support.v4.app.DialogFragment {
     @NonNull
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
+        final TaskList.Task task = getArguments().getParcelable(TaskListActivity.ARG_TASK);
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             return builder.setMessage(String.format(getResources().getString(R.string.complete_task_dialog_message), task.getName()))
                     .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
 task.complete();
-                            listener.onComplete(position);
+                            listener.onComplete(task, position);
                         }
                     })
                     .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
@@ -51,7 +52,7 @@ task.complete();
         }
 
         public static interface CompleteDialogListener {
-void onComplete(int position);
+void onComplete(TaskList.Task task, int position);
         }
 }
 

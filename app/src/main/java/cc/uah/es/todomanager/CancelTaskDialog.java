@@ -31,13 +31,14 @@ public class CancelTaskDialog extends android.support.v4.app.DialogFragment{
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        final TaskList.Task task = getArguments().getParcelable(TaskListActivity.ARG_TASK);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         return builder.setMessage(String.format(getResources().getString(R.string.cancel_task_dialog_message), task.getName()))
                 .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         task.cancel();
-                        listener.onCancel(position);
+                        listener.onCancel(task, position);
                     }
                 })
                 .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
@@ -50,7 +51,7 @@ public class CancelTaskDialog extends android.support.v4.app.DialogFragment{
     }
 
     public static interface  CancelDialogListener {
-        void onCancel(int position);
+        void onCancel(TaskList.Task task, int position);
     }
 }
 
