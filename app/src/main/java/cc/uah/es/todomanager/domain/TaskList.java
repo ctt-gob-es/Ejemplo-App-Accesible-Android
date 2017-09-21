@@ -1,5 +1,8 @@
 package cc.uah.es.todomanager.domain;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -79,7 +82,7 @@ isInitialized = true;
      * /**
      * A task to achieve.
      */
-    public static class Task {
+    public static class Task implements Parcelable {
 
         private long id;
         private String name;
@@ -90,6 +93,7 @@ isInitialized = true;
         private int completed;
         private TaskStatus status;
 
+        public static final Parcelable.Creator CREATOR = new TaskCreator();
         public static final String LOW_PRIORITY = "low_priority";
         public static final String MEDIUM_PRIORITY = "medium_priority";
         public static final String HIGH_PRIORITY = "high_priority";
@@ -113,6 +117,10 @@ priority = MEDIUM_PRIORITY;
             this.deadline = deadline;
             completed = 0;
             status = new PendingTask();
+        }
+
+        public Task(Parcel in) {
+            readFromParcel(in);
         }
 
         public long getId() {
@@ -207,9 +215,61 @@ priority = MEDIUM_PRIORITY;
         }
 
         @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+dest.writeLong(id);
+            dest.writeString(name);
+            dest.writeString(details);
+            dest.writeString(priority);
+            boolean[] temp = {complex};
+            dest.writeBooleanArray(temp);
+            dest.writeInt(completed);
+            dest.writeString(status.getStatusDescription());
+            if (deadline != null) dest.writeLong(deadline.getTime());
+        }
+
+        protected void readFromParcel(Parcel in) {
+            id = in.readLong();
+            name = in.readString();
+            details = in.readString();
+            priority = in.readString();
+            boolean[] temp = new boolean[1];
+            in.readBooleanArray(temp);
+            complex = temp[0];
+            completed = in.readInt();
+            String s = in.readString();
+            switch (s) {
+                case PendingTask.STATUS: status = new PendingTask(); break;
+                case CompletedTask.STATUS: status = new CompletedTask(); break;
+                case CanceledTask.STATUS: status = new CanceledTask();
+            }
+            if (in.dataAvail() > 0) {
+                long timestamp = in.readLong();
+                deadline = new Date(timestamp);
+            }
+            else deadline = null;
+        }
+
+        @Override
         public String toString() {
             return name;
         }
+
+    public static class  TaskCreator implements  Parcelable.Creator<Task> {
+        @Override
+        public Task createFromParcel(Parcel source) {
+            return new Task(source);
+        }
+
+        @Override
+        public Task[] newArray(int size) {
+            return new Task[size];
+        }
+    }
     }
 
     /**
