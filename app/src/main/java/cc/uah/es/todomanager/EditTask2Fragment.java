@@ -13,6 +13,7 @@ import android.widget.DatePicker;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.StringTokenizer;
 
 import cc.uah.es.todomanager.domain.TaskList;
 
@@ -25,6 +26,7 @@ import cc.uah.es.todomanager.domain.TaskList;
 public class EditTask2Fragment extends Fragment {
 
     public static final String TAG = "es.uah.cc.todomanager.EditTask2Fragment";
+    public static final String EDIT_TASK_2 = "cc.uah.es.todomanager.edittask2";
     private TaskList.Task task;
     private OnEditTaskListener listener;
 
@@ -51,7 +53,7 @@ public class EditTask2Fragment extends Fragment {
     public static EditTask2Fragment newInstance(OnEditTaskListener listener, TaskList.Task task) {
         EditTask2Fragment fragment = new EditTask2Fragment();
         Bundle args = new Bundle();
-        args.putParcelable(NewTaskActivity.ARG_NEW_TASK2, task);
+        args.putParcelable(EDIT_TASK_2, task);
         fragment.setArguments(args);
         fragment.setOnEditTaskListener(listener);
         return fragment;
@@ -66,8 +68,8 @@ public class EditTask2Fragment extends Fragment {
             appBarLayout.setTitle(getResources().getString(R.string.title_edit_task_2));
         }
 
-        if (savedInstanceState == null) {
-            task = getArguments().getParcelable(TaskListActivity.ARG_TASK);
+        if (getArguments().containsKey(EDIT_TASK_2)) {
+            task = getArguments().getParcelable(EDIT_TASK_2);
         }
     }
 

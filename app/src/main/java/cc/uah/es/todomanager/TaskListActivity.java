@@ -202,11 +202,7 @@ cancelTask(holder.mItem, position);
 
     protected void viewTask(TaskList.Task task, int position, View v) {
         if (mTwoPane) {
-            Bundle arguments = new Bundle();
-            arguments.putParcelable(ARG_TASK, task);
-            arguments.putInt(TaskDetailFragment.ARG_ITEM_POS, position);
-            TaskDetailFragment fragment = TaskDetailFragment.newInstance(this, new OnListEditButtonListener());
-            fragment.setArguments(arguments);
+            TaskDetailFragment fragment = TaskDetailFragment.newInstance(this, new OnListEditButtonListener(), task, position);
             getSupportFragmentManager().beginTransaction()
                     .addToBackStack(TaskDetailFragment.TAG)
                     .replace(R.id.task_detail_container, fragment)
@@ -295,6 +291,11 @@ TaskList.getInstance().setTask(task);
                     addTask();
                 }
                     break;
+            case EditTaskActivity.ACTIVITY_CODE: if (requestCode == TaskDetailActivity.CHANGED) {
+                TaskList.Task t = data.getParcelableExtra(ARG_TASK);
+                TaskList.getInstance().setTask(t);
+                notifyTaskChanged(data.getIntExtra(TaskDetailFragment.ARG_ITEM_POS, -1));
+            }
         }
     }
 

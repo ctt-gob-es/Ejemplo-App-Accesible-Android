@@ -10,8 +10,7 @@ import cc.uah.es.todomanager.domain.TaskList;
 
 public class NewTaskActivity extends AppCompatActivity   {
     public static final int ACTIVITY_CODE = 2;
-    public static final String ARG_NEW_TASK1 = "cc.uah.es.todomanager.newtask1";
-    public static final String ARG_NEW_TASK2 = "cc.uah.es.todomanager.newtas2";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

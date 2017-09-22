@@ -54,13 +54,9 @@ public class TaskDetailActivity extends AppCompatActivity implements OnTaskChang
         if (savedInstanceState == null) {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
-            Bundle arguments = new Bundle();
-            TaskList.Task task = getIntent().getParcelableExtra(TaskListActivity.ARG_TASK);
-            arguments.putParcelable(TaskListActivity.ARG_TASK, task);
+            task = getIntent().getParcelableExtra(TaskListActivity.ARG_TASK);
             position = getIntent().getIntExtra(TaskDetailFragment.ARG_ITEM_POS, -1);
-            arguments.putInt(TaskDetailFragment.ARG_ITEM_POS, position);
-            fragment = TaskDetailFragment.newInstance(this, new OnDetailsEditButtonListener());
-            fragment.setArguments(arguments);
+            fragment = TaskDetailFragment.newInstance(this, new OnDetailsEditButtonListener(), task, position);
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.task_detail_container, fragment)
                     .commit();
@@ -103,17 +99,27 @@ public class TaskDetailActivity extends AppCompatActivity implements OnTaskChang
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == EditTaskActivity.ACTIVITY_CODE) {
             if (resultCode == EditTask1Fragment.TASK_EDITION_COMPLETED) {
-                TaskList.Task t = TaskList.getInstance().getTask(data.getLongExtra(TaskDetailFragment.ARG_ITEM_ID, -1));
-fragment.updateTask(t);
+                changed = true;
+                task = data.getParcelableExtra(TaskListActivity.ARG_TASK);
             }
         }
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        TaskDetailFragment fragment = TaskDetailFragment.newInstance(this, new OnDetailsEditButtonListener(), task, position);
+        getSupportFragmentManager().popBackStack();
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.task_detail_container, fragment)
+                .commit();
     }
 
     protected  class OnDetailsEditButtonListener implements OnEditButtonListener {
         @Override
         public void init(TaskList.Task task) {
             Intent intent = new Intent(getApplicationContext(), EditTaskActivity.class);
-            intent.putExtra(TaskDetailFragment.ARG_ITEM_ID, task.getId());
+            intent.putExtra(TaskListActivity.ARG_TASK, task);
             startActivityForResult(intent, EditTaskActivity.ACTIVITY_CODE);
         }
     }

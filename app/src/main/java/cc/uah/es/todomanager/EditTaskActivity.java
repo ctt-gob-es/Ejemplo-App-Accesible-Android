@@ -32,8 +32,8 @@ public class EditTaskActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             // Create the new task 1 fragment and add it to the activity
             // using a fragment transaction.
-            TaskList.Task task = TaskList.getInstance().getTask(getIntent().getLongExtra(TaskDetailFragment.ARG_ITEM_ID, -1));
-            EditTask1Fragment fragment = EditTask1Fragment.newInstance(new OnEditTaskListener(), task.clone());
+            TaskList.Task task = getIntent().getParcelableExtra(TaskListActivity.ARG_TASK);
+            EditTask1Fragment fragment = EditTask1Fragment.newInstance(new OnEditTaskListener(), task);
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.new_task_form_container, fragment)
                     .commit();
@@ -82,9 +82,8 @@ public class EditTaskActivity extends AppCompatActivity {
 
         @Override
         public void onFinish(TaskList.Task task) {
-            TaskList.getInstance().setTask(task);
             Intent intent = new Intent();
-            intent.putExtra(TaskDetailFragment.ARG_ITEM_ID, task.getId());
+            intent.putExtra(TaskListActivity.ARG_TASK, task);
             setResult(EditTask1Fragment.TASK_EDITION_COMPLETED, intent);
             finish();
         }

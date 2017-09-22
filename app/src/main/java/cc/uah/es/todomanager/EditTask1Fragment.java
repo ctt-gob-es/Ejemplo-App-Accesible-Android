@@ -30,6 +30,7 @@ import cc.uah.es.todomanager.domain.TaskList;
  */
 public class EditTask1Fragment extends Fragment {
     public static final String TAG = "es.uah.cc.todomanager.EditTask1Fragment";
+    public static final String EDIT_TASK_1 = "cc.uah.es.todomanager.edittask1";
     public static final int TASK_CREATION_COMPLETED = 1;
     public static final int TASK_EDITION_COMPLETED = 2;
     public static final int TASK_CREATION_CANCELED = 0;
@@ -53,7 +54,7 @@ public class EditTask1Fragment extends Fragment {
         EditTask1Fragment fragment = new EditTask1Fragment();
         fragment.setOnEditTaskListener(listener);
         Bundle args = new Bundle();
-args.putParcelable(NewTaskActivity.ARG_NEW_TASK1, task);
+args.putParcelable(EDIT_TASK_1, task);
         fragment.setArguments(args);
         return fragment;
     }
@@ -75,8 +76,8 @@ args.putParcelable(NewTaskActivity.ARG_NEW_TASK1, task);
             appBarLayout.setTitle(getResources().getString(R.string.title_edit_task_1));
         }
 
-        if (savedInstanceState == null) {
-task = getArguments().getParcelable(TaskListActivity.ARG_TASK);
+        if (getArguments().containsKey(EDIT_TASK_1)) {
+task = getArguments().getParcelable(EDIT_TASK_1);
         }
     }
 

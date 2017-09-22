@@ -47,10 +47,14 @@ public class TaskDetailFragment extends Fragment implements CompleteTaskDialog.C
     public TaskDetailFragment() {
     }
 
-    public static TaskDetailFragment newInstance(OnTaskChangedListener taskChangedListener, OnEditButtonListener editButtonListener) {
+    public static TaskDetailFragment newInstance(OnTaskChangedListener taskChangedListener, OnEditButtonListener editButtonListener, TaskList.Task task, int position) {
 TaskDetailFragment fragment = new TaskDetailFragment();
         fragment.setOnTaskChangedListener(taskChangedListener);
         fragment.setEditButtonListener(editButtonListener);
+        Bundle args = new Bundle();
+        args.putParcelable(TaskListActivity.ARG_TASK, task);
+        args.putInt(ARG_ITEM_POS, position);
+        fragment.setArguments(args);
         return fragment;
     }
 
