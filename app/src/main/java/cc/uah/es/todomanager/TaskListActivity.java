@@ -13,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -297,6 +298,19 @@ TaskList.getInstance().setTask(task);
                 notifyTaskChanged(data.getIntExtra(TaskDetailFragment.ARG_ITEM_POS, -1));
             }
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.settings_option: Intent intent = new Intent(this, SettingsActivity.class);
+                startActivity(intent);
+                return true;
+            case R.id.help_option: return true;
+            case R.id.contact_option: return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     protected  class  OnNewTaskListener implements OnEditTaskListener {

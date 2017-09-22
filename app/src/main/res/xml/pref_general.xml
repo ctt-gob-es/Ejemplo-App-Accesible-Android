@@ -1,0 +1,15 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <SwitchPreference
+        android:defaultValue="true"
+        android:key="hide_completed"
+        android:summary="@string/hide_completed_sum"
+        android:title="@string/hide_completed" />
+
+    <SwitchPreference
+        android:defaultValue="true"
+        android:key="hide_canceled"
+        android:summary="@string/hide_canceled_sum"
+        android:title="@string/hide_canceled" />
+
+</PreferenceScreen>

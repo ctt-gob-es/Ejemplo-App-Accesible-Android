@@ -37,7 +37,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="cc.uah.es.todomanager.TaskListActivity" />
         </activity>
-
         <activity
             android:name=".EditTaskActivity"
             android:label="@string/title_activity_new_task"
@@ -47,7 +46,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="cc.uah.es.todomanager.TaskDetailActivity" />
         </activity>
-
+        <activity
+            android:name=".SettingsActivity"
+            android:label="@string/title_activity_settings"
+            android:parentActivityName=".TaskListActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="cc.uah.es.todomanager.TaskListActivity" />
+        </activity>
     </application>
 
 </manifest>
