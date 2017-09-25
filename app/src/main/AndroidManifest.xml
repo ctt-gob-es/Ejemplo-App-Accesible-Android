@@ -54,7 +54,16 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="cc.uah.es.todomanager.TaskListActivity" />
         </activity>
-        <activity android:name=".HelpActivity"></activity>
+        <activity android:name=".HelpActivity" />
+        <activity
+            android:name=".ContactActivity"
+            android:label="@string/title_activity_contact"
+            android:parentActivityName=".TaskListActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="cc.uah.es.todomanager.TaskListActivity" />
+        </activity>
     </application>
 
 </manifest>

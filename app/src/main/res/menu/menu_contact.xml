@@ -1,0 +1,10 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="cc.uah.es.todomanager.ContactActivity">
+    <item
+        android:id="@+id/send_button"
+        android:icon="@android:drawable/ic_menu_send"
+        android:title="@string/send_button"
+        app:showAsAction="always" />
+</menu>

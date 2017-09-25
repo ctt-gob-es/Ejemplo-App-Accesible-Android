@@ -310,7 +310,9 @@ TaskList.getInstance().setTask(task);
             case R.id.help_option: Intent helpIntent = new Intent(this, HelpActivity.class);
                 startActivity(helpIntent);
                 return true;
-            case R.id.contact_option: return true;
+            case R.id.contact_option: Intent contactIntent = new Intent(this, ContactActivity.class);
+                startActivity(contactIntent);
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }

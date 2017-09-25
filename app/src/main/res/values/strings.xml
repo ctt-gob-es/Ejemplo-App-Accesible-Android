@@ -83,11 +83,14 @@
     <string name="notify_near_deadline">Notify near expiration</string>
     <string name="notify_deadline_sum">Notifies when a deadline has expired.</string>
     <string name="notify_near_deadline_sum">Notifies when a deadline is just 3 days to expire.</string>
-    <string name="google_drive">Google Drive</string>
-    <string name="onedrive">OneDrive</string>
-    <string name="dropbox">Dropbox</string>
     <string name="hide_completed">Hide completed tasks</string>
     <string name="hide_canceled">Hide canceled tasks</string>
     <string name="hide_completed_sum">hides the completed tasks on the list.</string>
     <string name="hide_canceled_sum">Hides the canceled tasks on the list.</string>
+    <string name="title_activity_contact">Contact support</string>
+    <string name="full_name">Name:</string>
+    <string name="email">E-mail:</string>
+    <string name="message">Message:</string>
+    <string name="send_button">Send</string>
+    <string name="send_message_confirmation">The message will be sent to our support team. Do you want to continue?</string>
 </resources>
