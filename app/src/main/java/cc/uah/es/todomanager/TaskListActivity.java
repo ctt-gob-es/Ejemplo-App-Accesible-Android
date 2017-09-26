@@ -49,7 +49,6 @@ public class TaskListActivity extends AppCompatActivity {
      */
     private boolean mTwoPane;
     private List<TaskList.Task> filteredTasks;
-    // private boolean listChanged;
     private SharedPreferences.OnSharedPreferenceChangeListener preferenceChangeListener;
 
     protected  List<TaskList.Task> filterTasks(List<TaskList.Task> source) {
@@ -86,7 +85,6 @@ refreshTasks((RecyclerView) findViewById(R.id.task_list));
         toolbar.setTitle(getTitle());
 
         TaskList.fillSampleData(TaskList.getInstance());
-        // listChanged = false;
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -110,17 +108,6 @@ refreshTasks((RecyclerView) findViewById(R.id.task_list));
             mTwoPane = true;
         }
     }
-
-    /* @Override
-    protected void onPostResume() {
-        super.onPostResume();
-        if (listChanged) {
-            notifyTaskListChanged();
-            listChanged = false;
-        }
-
-    }
-*/
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -413,7 +400,7 @@ Fragment fragment = EditTask2Fragment.newInstance(new OnNewTaskListener(), task)
 
         @Override
         public void onPreviousStep(TaskList.Task task) {
-getSupportFragmentManager().popBackStack(EditTask2Fragment.TAG, 0);
+getSupportFragmentManager().popBackStack();
         }
 
         @Override
@@ -468,7 +455,7 @@ new OnListTaskChangedListener().onTaskChanged(task, position);
 protected class OnListEditButtonListener implements  OnEditButtonListener {
     @Override
     public void init(TaskList.Task task) {
-        EditTask1Fragment fragment = EditTask1Fragment.newInstance(new OnUpdateTaskListener(), task.clone());
+        EditTask1Fragment fragment = EditTask1Fragment.newInstance(new OnUpdateTaskListener(), task);
         getSupportFragmentManager().beginTransaction()
                 .addToBackStack(EditTask1Fragment.TAG)
                 .replace(R.id.task_detail_container, fragment)
@@ -481,7 +468,6 @@ protected class OnFilterChangedListener implements SharedPreferences.OnSharedPre
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (key.equals(SettingsActivity.GeneralPreferenceFragment.hide_canceled) | key.equals(SettingsActivity.GeneralPreferenceFragment.HIDE_COMPLETED))
 refreshTasks();
-        // listChanged = true;
     }
 }
 }

@@ -208,13 +208,6 @@ priority = MEDIUM_PRIORITY;
             return (int) (id ^ (id >>> 32));
         }
 
-        public Task clone() {
-            Task t = new Task(id, name, details, priority, deadline, complex);
-            t.setCompleted(completed);
-            t.setStatus(status);
-            return t;
-        }
-
         @Override
         public int describeContents() {
             return 0;

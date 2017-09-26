@@ -61,16 +61,14 @@ public class NewTaskActivity extends AppCompatActivity   {
         public void onNextStep(TaskList.Task task) {
                 EditTask2Fragment fragment = EditTask2Fragment.newInstance(new OnNewTaskListener(), task);
 getSupportFragmentManager().beginTransaction()
+        .addToBackStack(EditTask2Fragment.TAG)
         .replace(R.id.new_task_form_container, fragment)
         .commit();
         }
 
         @Override
         public void onPreviousStep(TaskList.Task task) {
-            EditTask1Fragment fragment = EditTask1Fragment.newInstance(new OnNewTaskListener(), new TaskList.Task());
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.new_task_form_container, fragment)
-                    .commit();
+            getSupportFragmentManager().popBackStack();
         }
 
         @Override
