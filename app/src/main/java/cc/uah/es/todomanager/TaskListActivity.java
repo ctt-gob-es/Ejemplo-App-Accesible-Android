@@ -2,11 +2,15 @@ package cc.uah.es.todomanager;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.preference.SwitchPreference;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.SharedPreferencesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -25,6 +29,7 @@ import cc.uah.es.todomanager.domain.TaskList;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -35,7 +40,7 @@ import java.util.List;
  * item details. On tablets, the activity presents the list of items and
  * item details side-by-side using two vertical panes.
  */
-public class TaskListActivity extends AppCompatActivity implements CompleteTaskDialog.CompleteDialogListener, CancelTaskDialog.CancelDialogListener, OnTaskChangedListener {
+public class TaskListActivity extends AppCompatActivity {
 
     public static  final String ARG_TASK = "cc.uah.es.todomanager.task";
     /**
@@ -43,7 +48,33 @@ public class TaskListActivity extends AppCompatActivity implements CompleteTaskD
      * device.
      */
     private boolean mTwoPane;
-    private Bundle fragments;
+    private List<TaskList.Task> filteredTasks;
+    // private boolean listChanged;
+    private SharedPreferences.OnSharedPreferenceChangeListener preferenceChangeListener;
+
+    protected  List<TaskList.Task> filterTasks(List<TaskList.Task> source) {
+        List<TaskList.Task> l = new ArrayList<TaskList.Task>();
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean hideCompleted = preferences.getBoolean(SettingsActivity.GeneralPreferenceFragment.HIDE_COMPLETED, false);
+boolean hideCancelled = preferences.getBoolean(SettingsActivity.GeneralPreferenceFragment.hide_canceled, false);
+        Iterator it = source.iterator();
+        while (it.hasNext()) {
+            TaskList.Task t = (TaskList.Task) it.next();
+if (hideCancelled & t.getStatus().getStatusDescription().equals(TaskList.CanceledTask.STATUS)) continue;
+            if (hideCompleted & t.getStatus().getStatusDescription().equals(TaskList.CompletedTask.STATUS)) continue;
+            l.add(t);
+        }
+        return l;
+    }
+
+    protected void refreshTasks(RecyclerView list) {
+        filteredTasks = filterTasks(TaskList.getInstance().getTasks());
+        setupRecyclerView(list, filteredTasks);
+    }
+
+    protected void refreshTasks() {
+refreshTasks((RecyclerView) findViewById(R.id.task_list));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +86,7 @@ public class TaskListActivity extends AppCompatActivity implements CompleteTaskD
         toolbar.setTitle(getTitle());
 
         TaskList.fillSampleData(TaskList.getInstance());
-        fragments = new Bundle();
+        // listChanged = false;
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -65,9 +96,11 @@ public class TaskListActivity extends AppCompatActivity implements CompleteTaskD
             }
         });
 
-        View recyclerView = findViewById(R.id.task_list);
+        preferenceChangeListener = new OnFilterChangedListener();
+        PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(preferenceChangeListener);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.task_list);
         assert recyclerView != null;
-        setupRecyclerView((RecyclerView) recyclerView);
+        refreshTasks(recyclerView);
 
         if (findViewById(R.id.task_detail_container) != null) {
             // The detail container view will be present only in the
@@ -78,14 +111,25 @@ public class TaskListActivity extends AppCompatActivity implements CompleteTaskD
         }
     }
 
+    /* @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        if (listChanged) {
+            notifyTaskListChanged();
+            listChanged = false;
+        }
+
+    }
+*/
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
         return true;
     }
 
-    private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(TaskList.getInstance().getTasks()));
+    private void setupRecyclerView(@NonNull RecyclerView recyclerView, List<TaskList.Task> tasks) {
+        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(tasks));
     }
 
     public class SimpleItemRecyclerViewAdapter
@@ -186,7 +230,7 @@ cancelTask(holder.mItem, position);
     }
 
     protected void completeTask(TaskList.Task task, int position) {
-        CompleteTaskDialog dialog = new CompleteTaskDialog(task, position, this);
+        CompleteTaskDialog dialog = new CompleteTaskDialog(task, position, new OnListCompleteTaskListener());
         Bundle args = new Bundle();
         args.putParcelable(ARG_TASK, task);
         dialog.setArguments(args);
@@ -194,7 +238,7 @@ cancelTask(holder.mItem, position);
     }
 
     protected void cancelTask (TaskList.Task task, int position) {
-        CancelTaskDialog dialog = new CancelTaskDialog(task, position, this);
+        CancelTaskDialog dialog = new CancelTaskDialog(task, position, new OnListCancelTaskListener());
         Bundle args = new Bundle();
         args.putParcelable(ARG_TASK, task);
         dialog.setArguments(args);
@@ -203,7 +247,7 @@ cancelTask(holder.mItem, position);
 
     protected void viewTask(TaskList.Task task, int position, View v) {
         if (mTwoPane) {
-            TaskDetailFragment fragment = TaskDetailFragment.newInstance(this, new OnListEditButtonListener(), task, position);
+            TaskDetailFragment fragment = TaskDetailFragment.newInstance(new OnListTaskChangedListener(), new OnListEditButtonListener(), task, position);
             getSupportFragmentManager().beginTransaction()
                     .addToBackStack(TaskDetailFragment.TAG)
                     .replace(R.id.task_detail_container, fragment)
@@ -247,32 +291,69 @@ cancelTask(holder.mItem, position);
         list.getAdapter().notifyItemInserted(TaskList.getInstance().getTasks().size());
     }
 
+    protected void notifyItemRemoved(int position) {
+        RecyclerView list = (RecyclerView) findViewById(R.id.task_list);
+        list.getAdapter().notifyItemRemoved(position);
+    }
+
     protected void addTask() {
-        notifyItemInserted();
+        refreshTasks();
         Toast toast = Toast.makeText(getApplicationContext(), R.string.task_added, Toast.LENGTH_SHORT);
         toast.show();
     }
 
-    @Override
-    public void onCancel(TaskList.Task task, int position) {
-        TaskList.getInstance().setTask(task);
-        notifyTaskChanged(position);
-        Toast toast = Toast.makeText(getApplicationContext(), R.string.task_canceled, Toast.LENGTH_SHORT);
-        toast.show();
+    public class  OnListCancelTaskListener implements CancelTaskDialog.CancelDialogListener {
+        @Override
+        public void onCancel(TaskList.Task task, int position) {
+            TaskList.getInstance().setTask(task);
+            /* if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean(SettingsActivity.GeneralPreferenceFragment.hide_canceled, false)) {
+                notifyItemRemoved(position);
+                filteredTasks.remove(filteredTasks.indexOf(task));
+            } else notifyTaskChanged(position); */
+            refreshTasks();
+            Toast toast = Toast.makeText(getApplicationContext(), R.string.task_canceled, Toast.LENGTH_SHORT);
+            toast.show();
+        }
     }
 
-    @Override
-    public void onComplete(TaskList.Task task, int position) {
-        TaskList.getInstance().setTask(task);
-        notifyTaskChanged(position);
-        Toast toast = Toast.makeText(getApplicationContext(), R.string.task_completed, Toast.LENGTH_SHORT);
-        toast.show();
+    public class OnListCompleteTaskListener implements CompleteTaskDialog.CompleteDialogListener {
+        @Override
+        public void onComplete(TaskList.Task task, int position) {
+            TaskList.getInstance().setTask(task);
+            /* if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean(SettingsActivity.GeneralPreferenceFragment.HIDE_COMPLETED, false)) {
+                filteredTasks.remove(filteredTasks.indexOf(task));
+                notifyItemRemoved(position);
+            } else notifyTaskChanged(position); */
+            refreshTasks();
+            Toast toast = Toast.makeText(getApplicationContext(), R.string.task_completed, Toast.LENGTH_SHORT);
+            toast.show();
+        }
     }
 
-    @Override
-    public void onTaskChanged(TaskList.Task task, int position) {
-TaskList.getInstance().setTask(task);
-        notifyTaskChanged(position);
+    public class OnListTaskChangedListener implements  OnTaskChangedListener {
+        @Override
+        public void onTaskChanged(TaskList.Task task, int position) {
+            updateTask(task, position);
+        }
+    }
+
+    protected void updateTask(TaskList.Task task, int position) {
+        TaskList.getInstance().setTask(task);
+        refreshTasks();
+        /* SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        boolean hideCompleted = preferences.getBoolean(SettingsActivity.GeneralPreferenceFragment.HIDE_COMPLETED, false);
+        boolean hideCancelled = preferences.getBoolean(SettingsActivity.GeneralPreferenceFragment.hide_canceled, false);
+        if (hideCancelled & task.getStatus().getStatusDescription().equals(TaskList.CanceledTask.STATUS)) {
+            filteredTasks.remove(filteredTasks.indexOf(task));
+            notifyItemRemoved(position);
+        } else if (hideCompleted & task.getStatus().getStatusDescription().equals(TaskList.CompletedTask.STATUS)) {
+            filteredTasks.remove(filteredTasks.indexOf(task));
+            notifyItemRemoved(position);
+        } else {
+            filteredTasks.set(filteredTasks.indexOf(task), task);
+            notifyTaskChanged(position);
+        }
+        */
     }
 
     @Override
@@ -281,8 +362,8 @@ TaskList.getInstance().setTask(task);
             case TaskDetailActivity.ACTIVITY_CODE:
                 if (resultCode == TaskDetailActivity.CHANGED) {
                     TaskList.Task t = data.getParcelableExtra(ARG_TASK);
-                    TaskList.getInstance().setTask(t);
-                    notifyTaskChanged(data.getExtras().getInt(TaskDetailFragment.ARG_ITEM_POS));
+                    int position = data.getIntExtra(TaskDetailFragment.ARG_ITEM_POS, -1);
+updateTask(t, position);
                 }
                 break;
             case NewTaskActivity.ACTIVITY_CODE:
@@ -295,8 +376,10 @@ TaskList.getInstance().setTask(task);
             case EditTaskActivity.ACTIVITY_CODE: if (requestCode == TaskDetailActivity.CHANGED) {
                 TaskList.Task t = data.getParcelableExtra(ARG_TASK);
                 TaskList.getInstance().setTask(t);
+                filteredTasks.set(filteredTasks.indexOf(t), t);
                 notifyTaskChanged(data.getIntExtra(TaskDetailFragment.ARG_ITEM_POS, -1));
             }
+                break;
         }
     }
 
@@ -371,10 +454,14 @@ TaskList.getInstance().addTask(task);
 
         @Override
         public void onFinish(TaskList.Task task) {
-TaskList.getInstance().setTask(task);
+            int position = filteredTasks.indexOf(task);
+new OnListTaskChangedListener().onTaskChanged(task, position);
             getSupportFragmentManager().popBackStack(EditTask1Fragment.TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            TaskDetailFragment fragment = (TaskDetailFragment) getSupportFragmentManager().getFragment(fragments, TaskDetailFragment.TAG);
-            fragment.updateTask(task);
+            getSupportFragmentManager().popBackStack();
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.task_detail_container, TaskDetailFragment.newInstance(new OnListTaskChangedListener(), new OnListEditButtonListener(), task, position))
+                    .addToBackStack(TaskDetailFragment.TAG)
+                    .commit();
         }
     }
 
@@ -386,6 +473,15 @@ protected class OnListEditButtonListener implements  OnEditButtonListener {
                 .addToBackStack(EditTask1Fragment.TAG)
                 .replace(R.id.task_detail_container, fragment)
 .commit();
+    }
+}
+
+protected class OnFilterChangedListener implements SharedPreferences.OnSharedPreferenceChangeListener {
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (key.equals(SettingsActivity.GeneralPreferenceFragment.hide_canceled) | key.equals(SettingsActivity.GeneralPreferenceFragment.HIDE_COMPLETED))
+refreshTasks();
+        // listChanged = true;
     }
 }
 }
