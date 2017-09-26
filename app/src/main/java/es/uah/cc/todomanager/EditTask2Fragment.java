@@ -1,4 +1,4 @@
-package cc.uah.es.todomanager;
+package es.uah.cc.todomanager;
 
 
 import android.app.Activity;
@@ -13,9 +13,9 @@ import android.widget.DatePicker;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.StringTokenizer;
 
-import cc.uah.es.todomanager.domain.TaskList;
+import es.uah.cc.todomanager.R;
+import es.uah.cc.todomanager.domain.TaskList;
 
 
 /**

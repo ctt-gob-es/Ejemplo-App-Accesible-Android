@@ -1,15 +1,16 @@
-package cc.uah.es.todomanager;
+package es.uah.cc.todomanager;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
-import cc.uah.es.todomanager.domain.TaskList;
+import es.uah.cc.todomanager.R;
+import es.uah.cc.todomanager.domain.TaskList;
 
-public class NewTaskActivity extends AppCompatActivity   {
-    public static final int ACTIVITY_CODE = 2;
+public class EditTaskActivity extends AppCompatActivity {
+    public static final int ACTIVITY_CODE = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,12 +33,13 @@ public class NewTaskActivity extends AppCompatActivity   {
         if (savedInstanceState == null) {
             // Create the new task 1 fragment and add it to the activity
             // using a fragment transaction.
-            EditTask1Fragment fragment = EditTask1Fragment.newInstance(new OnNewTaskListener(), new TaskList.Task());
+            TaskList.Task task = getIntent().getParcelableExtra(TaskListActivity.ARG_TASK);
+            EditTask1Fragment fragment = EditTask1Fragment.newInstance(new OnEditTaskListener(), task);
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.new_task_form_container, fragment)
                     .commit();
         }
-    }
+         }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -55,15 +57,15 @@ public class NewTaskActivity extends AppCompatActivity   {
         return super.onOptionsItemSelected(item);
     }
 
-    protected class OnNewTaskListener implements cc.uah.es.todomanager.OnEditTaskListener {
+    protected class  OnEditTaskListener implements es.uah.cc.todomanager.OnEditTaskListener {
 
         @Override
         public void onNextStep(TaskList.Task task) {
-                EditTask2Fragment fragment = EditTask2Fragment.newInstance(new OnNewTaskListener(), task);
-getSupportFragmentManager().beginTransaction()
-        .addToBackStack(EditTask2Fragment.TAG)
-        .replace(R.id.new_task_form_container, fragment)
-        .commit();
+            EditTask2Fragment fragment = EditTask2Fragment.newInstance(new OnEditTaskListener(), task);
+            getSupportFragmentManager().beginTransaction()
+                    .addToBackStack(EditTask2Fragment.TAG)
+                    .replace(R.id.new_task_form_container, fragment)
+                    .commit();
         }
 
         @Override
@@ -73,7 +75,7 @@ getSupportFragmentManager().beginTransaction()
 
         @Override
         public void onCancel(TaskList.Task task) {
-            setResult(EditTask1Fragment.TASK_CREATION_CANCELED);
+            setResult(EditTask1Fragment.TASK_EDITION_CANCELED);
             finish();
         }
 
@@ -81,7 +83,7 @@ getSupportFragmentManager().beginTransaction()
         public void onFinish(TaskList.Task task) {
             Intent intent = new Intent();
             intent.putExtra(TaskListActivity.ARG_TASK, task);
-setResult(EditTask1Fragment.TASK_CREATION_COMPLETED, intent);
+            setResult(EditTask1Fragment.TASK_EDITION_COMPLETED, intent);
             finish();
         }
     }

@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:padding="16dp"
     android:orientation="vertical"
-    tools:context="cc.uah.es.todomanager.TaskDetailFragment">
+    tools:context="cc.uah.es.todomanager.es.uah.cc.todomanager.TaskDetailFragment">
 <TextView
     android:id="@+id/task_name"
     android:layout_width="match_parent"

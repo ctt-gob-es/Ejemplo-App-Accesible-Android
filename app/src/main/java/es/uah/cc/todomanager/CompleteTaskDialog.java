@@ -1,16 +1,13 @@
-package cc.uah.es.todomanager;
+package es.uah.cc.todomanager;
 
-import android.app.Activity;
 import android.app.Dialog;
-import android.app.DialogFragment;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 
-import cc.uah.es.todomanager.domain.TaskList;
+import es.uah.cc.todomanager.R;
+import es.uah.cc.todomanager.domain.TaskList;
 
 /**
  * Created by Fjest on 11/09/2017.

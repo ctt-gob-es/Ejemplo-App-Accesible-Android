@@ -1,4 +1,4 @@
-package cc.uah.es.todomanager;
+package es.uah.cc.todomanager;
 
 import android.content.res.Configuration;
 import android.os.Bundle;

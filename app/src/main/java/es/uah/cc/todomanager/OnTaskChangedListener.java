@@ -1,6 +1,6 @@
-package cc.uah.es.todomanager;
+package es.uah.cc.todomanager;
 
-import cc.uah.es.todomanager.domain.TaskList;
+import es.uah.cc.todomanager.domain.TaskList;
 
 /**
  * Created by Fjest on 13/09/2017.

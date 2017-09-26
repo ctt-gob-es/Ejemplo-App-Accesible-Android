@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="cc.uah.es.todomanager.TaskDetailActivity"
+    tools:context="cc.uah.es.todomanager.es.uah.cc.todomanager.TaskDetailActivity"
     tools:ignore="MergeRootFrame">
 
     <android.support.design.widget.AppBarLayout

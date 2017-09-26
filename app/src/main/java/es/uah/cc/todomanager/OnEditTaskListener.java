@@ -1,6 +1,6 @@
-package cc.uah.es.todomanager;
+package es.uah.cc.todomanager;
 
-import cc.uah.es.todomanager.domain.TaskList;
+import es.uah.cc.todomanager.domain.TaskList;
 
 /**
  * This interface must be implemented by activities that contain edit task

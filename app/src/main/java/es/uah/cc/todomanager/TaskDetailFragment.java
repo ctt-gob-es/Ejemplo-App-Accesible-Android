@@ -1,7 +1,6 @@
-package cc.uah.es.todomanager;
+package es.uah.cc.todomanager;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.icu.text.DateFormat;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.os.Bundle;
@@ -15,7 +14,8 @@ import android.view.ViewGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import cc.uah.es.todomanager.domain.TaskList;
+import es.uah.cc.todomanager.R;
+import es.uah.cc.todomanager.domain.TaskList;
 
 /**
  * A fragment representing a single Task detail screen.

@@ -1,8 +1,7 @@
-package cc.uah.es.todomanager;
+package es.uah.cc.todomanager;
 
 
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -14,7 +13,6 @@ import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
@@ -24,6 +22,8 @@ import android.view.MenuItem;
 import android.support.v4.app.NavUtils;
 
 import java.util.List;
+
+import es.uah.cc.todomanager.R;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On

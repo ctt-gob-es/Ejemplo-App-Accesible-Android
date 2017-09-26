@@ -1,4 +1,4 @@
-package cc.uah.es.todomanager;
+package es.uah.cc.todomanager;
 
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -9,6 +9,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+
+import es.uah.cc.todomanager.R;
 
 /**
  * A placeholder fragment containing a simple view.

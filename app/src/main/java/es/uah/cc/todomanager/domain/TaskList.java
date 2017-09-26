@@ -1,11 +1,9 @@
-package cc.uah.es.todomanager.domain;
+package es.uah.cc.todomanager.domain;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
