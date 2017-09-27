@@ -13,6 +13,7 @@ public class HelpActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_help);
+        // Loads the hel.html local file.
         WebView webView = (WebView) findViewById(R.id.help_view);
         webView.loadUrl(BASE_URL + HELP_FILE);
     }

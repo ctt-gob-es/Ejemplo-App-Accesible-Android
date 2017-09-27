@@ -9,7 +9,13 @@ import android.view.MenuItem;
 import es.uah.cc.todomanager.R;
 import es.uah.cc.todomanager.domain.TaskList;
 
+/**
+ * Activity to add a new task.
+ */
 public class NewTaskActivity extends AppCompatActivity   {
+    /**
+     * The activity code for request code.
+     */
     public static final int ACTIVITY_CODE = 2;
 
     @Override
@@ -56,6 +62,9 @@ public class NewTaskActivity extends AppCompatActivity   {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Listener for new task events.
+     */
     protected class OnNewTaskListener implements OnEditTaskListener {
 
         @Override

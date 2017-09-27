@@ -18,13 +18,30 @@ import es.uah.cc.todomanager.domain.TaskList;
  */
 public class TaskDetailActivity extends AppCompatActivity implements OnTaskChangedListener{
     private final static String TAG = "TaskDetailActivity";
+    /**
+     * The activity code for request code.
+     */
     public static final int ACTIVITY_CODE = 1;
+    /**
+     * Result: the task changed.
+     */
     public final static int CHANGED = 1;
+    /**
+     * result: the task did not change.
+     */
     public final static int NOT_CHANGED = 0;
+    /**
+     * A field which indicates whether the task changed or not.
+     */
     private boolean changed = false;
+    /**
+     * the position of the task on the list view.
+     */
     private int position;
+    /**
+     * The task to be shown.
+     */
     private TaskList.Task task;
-    private TaskDetailFragment fragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,8 +70,9 @@ public class TaskDetailActivity extends AppCompatActivity implements OnTaskChang
             // using a fragment transaction.
             task = getIntent().getParcelableExtra(TaskListActivity.ARG_TASK);
             position = getIntent().getIntExtra(TaskDetailFragment.ARG_ITEM_POS, -1);
-            fragment = TaskDetailFragment.newInstance(this, new OnDetailsEditButtonListener(), task, position);
+            TaskDetailFragment fragment = TaskDetailFragment.newInstance(this, new OnDetailsEditButtonListener(), task, position);
             getSupportFragmentManager().beginTransaction()
+                    .addToBackStack(TaskDetailFragment.TAG)
                     .add(R.id.task_detail_container, fragment)
                     .commit();
         }

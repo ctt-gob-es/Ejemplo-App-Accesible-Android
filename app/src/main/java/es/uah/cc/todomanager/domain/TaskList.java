@@ -10,6 +10,9 @@ import java.util.Map;
 import java.util.Date;
         import java.util.Calendar;
 
+/**
+ * A task list using singleton pattern.
+ */
 public class TaskList {
 
     private Map<Long, Task> tasks;
@@ -34,14 +37,28 @@ public class TaskList {
         return instance;
     }
 
+    /**
+     * Gets the task list.
+     * @return A list.
+     */
     public List<Task> getTasks() {
         return taskList;
     }
 
+    /**
+     * Gets the task identified by the introduced id.
+     * @param id    The id of the task to get.
+     * @return
+     */
     public Task getTask(long id) {
         return tasks.get(id);
     }
 
+    /**
+     * Updates a task if it is in the list.
+     * @param task    The task to update.
+     * @return True if it was updated, false else.
+     */
     public boolean setTask(Task task) {
         if (tasks.containsKey(task.getId())) {
             tasks.put(task.getId(), task);
@@ -51,12 +68,24 @@ public class TaskList {
         else return false;
     }
 
+    /**
+     * Adds a new task to the list.
+     * @param name The title of the task.
+     * @param details     The description of the task.
+     * @param priority    The priority of the task.
+     * @param deadline    The deadline date.
+     * @param complex     Whether the task is complex or not.
+     */
     public void addTask(String name, String details, String priority, Date deadline, boolean complex) {
         Task t = new Task(idSerial, name, details, priority, deadline, complex);
 tasks.put(idSerial++, t);
         taskList.add(t);
     }
 
+    /**
+     * Adds a new task to the list.
+     * @param task    The task to add.
+     */
     public void addTask(Task task) {
         addTask(task.getName(), task.getDetails(), task.getPriority(), task.getDeadline(), task.isComplex());
     }
@@ -97,6 +126,9 @@ isInitialized = true;
         public static final String MEDIUM_PRIORITY = "medium_priority";
         public static final String HIGH_PRIORITY = "high_priority";
 
+        /**
+         * Empty constructor.
+         */
         public Task() {
             name = "";
 priority = MEDIUM_PRIORITY;
@@ -107,6 +139,15 @@ priority = MEDIUM_PRIORITY;
             completed = 0;
         }
 
+        /**
+         * Constructor to fill a task.
+         * @param id The task id
+         * @param name The title of the task.
+         * @param details The description of the task.
+         * @param priority the priority of the task.
+         * @param deadline The date of deadline.
+         * @param complex Whether the task is complex or not.
+         */
         public Task(long id, String name, String details, String priority, Date deadline, boolean complex) {
             this.id = id;
             this.name = name;
@@ -118,6 +159,10 @@ priority = MEDIUM_PRIORITY;
             status = new PendingTask();
         }
 
+        /**
+         * Constructor from a parcel.
+         * @param in    the parcel.
+         */
         public Task(Parcel in) {
             readFromParcel(in);
         }
@@ -275,13 +320,28 @@ timestamp[0] = 0;
      * Defining a state pattern for the tasks.
      */
     public static interface TaskStatus {
+        /**
+         * Completes the task.
+         * @param task    The task.
+         */
         void complete(TaskList.Task task);
 
+        /**
+         * Cancels the task.
+         * @param task    The task.
+         */
         void cancel(TaskList.Task task);
 
+        /**
+         * A string representing the status of the task.
+         * @return
+         */
         String getStatusDescription();
     }
 
+    /**
+     * A pending task status.
+     */
     public static class PendingTask implements TaskStatus {
         public static final String STATUS = "pending_task";
         @Override
@@ -301,6 +361,9 @@ timestamp[0] = 0;
         }
     }
 
+    /**
+     * A completed task status.
+     */
     public static class CompletedTask implements TaskStatus {
         public static final String STATUS = "completed_task";
 
@@ -320,6 +383,9 @@ timestamp[0] = 0;
         }
     }
 
+    /**
+     * A cancelled task status.
+     */
     public static class CanceledTask implements TaskStatus {
         public static final String STATUS = "canceled_task";
 

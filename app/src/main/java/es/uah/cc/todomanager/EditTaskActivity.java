@@ -9,7 +9,13 @@ import android.view.MenuItem;
 import es.uah.cc.todomanager.R;
 import es.uah.cc.todomanager.domain.TaskList;
 
+/**
+ * Activity to edit a task.
+ */
 public class EditTaskActivity extends AppCompatActivity {
+    /**
+     * Activity code for request code.
+     */
     public static final int ACTIVITY_CODE = 3;
 
     @Override
@@ -57,6 +63,9 @@ public class EditTaskActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Listener for update task events.
+     */
     protected class  OnEditTaskListener implements es.uah.cc.todomanager.OnEditTaskListener {
 
         @Override

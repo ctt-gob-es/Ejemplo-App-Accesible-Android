@@ -40,15 +40,30 @@ import java.util.List;
  */
 public class TaskListActivity extends AppCompatActivity {
 
+    /**
+     * The key to exchange task objects between activities.
+     */
     public static  final String ARG_TASK = "cc.uah.es.todomanager.task";
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
      * device.
      */
     private boolean mTwoPane;
+    /**
+     * A filtered task list.
+     */
     private List<TaskList.Task> filteredTasks;
+    /**
+     * A OnSharedPreferenceChangeListener.
+     * It must be a field of the activity in order to avoid the GC collects it.
+     */
     private SharedPreferences.OnSharedPreferenceChangeListener preferenceChangeListener;
 
+    /**
+     * Filters the task list attending to several preferences.
+     * @param source    The original list.
+     * @return The filtered list.
+     */
     protected  List<TaskList.Task> filterTasks(List<TaskList.Task> source) {
         List<TaskList.Task> l = new ArrayList<TaskList.Task>();
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -64,11 +79,18 @@ if (hideCancelled & t.getStatus().getStatusDescription().equals(TaskList.Cancele
         return l;
     }
 
+    /**
+     * Filter the master task list and refresh the recycler view using the resulting list.
+     * @param list    The recycler view list.
+     */
     protected void refreshTasks(RecyclerView list) {
         filteredTasks = filterTasks(TaskList.getInstance().getTasks());
         setupRecyclerView(list, filteredTasks);
     }
 
+    /**
+     * Refresh the main recycler view.
+     */
     protected void refreshTasks() {
 refreshTasks((RecyclerView) findViewById(R.id.task_list));
     }
@@ -82,6 +104,7 @@ refreshTasks((RecyclerView) findViewById(R.id.task_list));
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
 
+        //Initializes the task list.
         TaskList.fillSampleData(TaskList.getInstance());
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -92,8 +115,10 @@ refreshTasks((RecyclerView) findViewById(R.id.task_list));
             }
         });
 
+        // Listens to changes on preferences.
         preferenceChangeListener = new OnFilterChangedListener();
         PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(preferenceChangeListener);
+        // Initializes the recycler view.
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.task_list);
         assert recyclerView != null;
         refreshTasks(recyclerView);
@@ -117,9 +142,13 @@ refreshTasks((RecyclerView) findViewById(R.id.task_list));
         recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(tasks));
     }
 
+    /**
+     * An adapter to setup the recycler view elements.
+     */
     public class SimpleItemRecyclerViewAdapter
             extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
 
+        // the task list.
         private final List<TaskList.Task> mValues;
 
         public SimpleItemRecyclerViewAdapter(List<TaskList.Task> items) {
@@ -136,6 +165,7 @@ refreshTasks((RecyclerView) findViewById(R.id.task_list));
         @Override
         public void onBindViewHolder(final ViewHolder holder, final int position) {
             holder.mItem = mValues.get(position);
+            // We change the color of the task's title depending on its priority if it is pending.
             if (holder.mItem.getStatus() instanceof TaskList.PendingTask) {
                 switch (holder.mItem.getPriority()) {
                     case TaskList.Task.HIGH_PRIORITY:
@@ -147,6 +177,7 @@ refreshTasks((RecyclerView) findViewById(R.id.task_list));
                     default: holder.mNameView.setTextColor(getResources().getColor(R.color.medium_priority));
                 }
             } else {
+                // Else we change the color of the task's title depending on its status.
                 if (holder.mItem.getStatus() instanceof TaskList.CompletedTask) holder.mNameView.setTextColor(getResources().getColor(R.color.completed));
                 else if (holder.mItem.getStatus() instanceof TaskList.CanceledTask) holder.mNameView.setTextColor(getResources().getColor(R.color.canceled));
             }
@@ -154,8 +185,10 @@ refreshTasks((RecyclerView) findViewById(R.id.task_list));
             holder.mNameView.setText(holder.mItem.getName());
             if (holder.mItem.isComplex() & holder.mItem.getStatus() instanceof TaskList.PendingTask)
                 holder.mNameView.append("\n" + String.format(getResources().getString(R.string.percentage_completed), holder.mItem.getCompleted()));
+            // Deadline is only shown if it is setted.
             if (holder.mItem.getDeadline() != null)
             holder.mDeadlineView.setText(DateFormat.getDateInstance(DateFormat.SHORT).format(holder.mItem.getDeadline()));
+            // If the task is pending buttons to complete or cancel it are visible.
             if (holder.mItem.getStatus() instanceof TaskList.CompletedTask | holder.mItem.getStatus() instanceof  TaskList.CanceledTask) {
                 holder.mCompleteButton.setVisibility(View.INVISIBLE);
                 holder.mCancelButton.setVisibility(View.INVISIBLE);
@@ -163,7 +196,7 @@ refreshTasks((RecyclerView) findViewById(R.id.task_list));
                 holder.mCompleteButton.setVisibility(View.VISIBLE);
                 holder.mCancelButton.setVisibility(View.VISIBLE);
             }
-
+// If the user presses the title of the task its details will be shown.
             holder.mNameView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -190,6 +223,9 @@ cancelTask(holder.mItem, position);
             return mValues.size();
         }
 
+        /**
+         * A holder for the recycler view.
+         */
         public class ViewHolder extends RecyclerView.ViewHolder {
             public final View mView;
             public final TextView mNameView;
@@ -214,6 +250,11 @@ cancelTask(holder.mItem, position);
         }
     }
 
+    /**
+     * Marks  a task as completed.
+     * @param task        The task to complete.
+     * @param position the position on the list view.
+     */
     protected void completeTask(TaskList.Task task, int position) {
         CompleteTaskDialog dialog = new CompleteTaskDialog(task, position, new OnListCompleteTaskListener());
         Bundle args = new Bundle();
@@ -222,6 +263,11 @@ cancelTask(holder.mItem, position);
         dialog.show(getSupportFragmentManager(), "CompleteTask");
     }
 
+    /**
+     * Marks a task as cancelled.
+     * @param task        The task to be cancelled.
+     * @param position    te position on the list view.
+     */
     protected void cancelTask (TaskList.Task task, int position) {
         CancelTaskDialog dialog = new CancelTaskDialog(task, position, new OnListCancelTaskListener());
         Bundle args = new Bundle();
@@ -230,6 +276,12 @@ cancelTask(holder.mItem, position);
         dialog.show(getSupportFragmentManager(), "CancelDialog");
     }
 
+    /**
+     * Shows details of a task.
+     * @param task the task to be shown.
+     * @param position    The position of the task on the list view.
+     * @param v           The view pressed.
+     */
     protected void viewTask(TaskList.Task task, int position, View v) {
         if (mTwoPane) {
             TaskDetailFragment fragment = TaskDetailFragment.newInstance(new OnListTaskChangedListener(), new OnListEditButtonListener(), task, position);
@@ -247,6 +299,10 @@ cancelTask(holder.mItem, position);
         }
     }
 
+    /**
+     * Shows the new task form.
+     * @param v    The view pressed.
+     */
     protected void newTask(View v) {
         if (mTwoPane) {
             EditTask1Fragment fragment = EditTask1Fragment.newInstance(new OnNewTaskListener(), new TaskList.Task());
@@ -261,32 +317,52 @@ cancelTask(holder.mItem, position);
         }
     }
 
+    /**
+     * Notifies to recycler view a task was changed.
+     * @param position    The position on the list view.
+     */
     protected void notifyTaskChanged(int position) {
         RecyclerView list = (RecyclerView) findViewById(R.id.task_list);
         list.getAdapter().notifyItemChanged(position);
     }
 
+    /**
+     * Notifies that the tassk list was changed.
+     */
     protected void notifyTaskListChanged() {
         RecyclerView list = (RecyclerView) findViewById(R.id.task_list);
         list.getAdapter().notifyDataSetChanged();
     }
 
+    /**
+     * Notifies that a new item was inserted on the list.
+     */
     protected void notifyItemInserted() {
         RecyclerView list = (RecyclerView) findViewById(R.id.task_list);
         list.getAdapter().notifyItemInserted(TaskList.getInstance().getTasks().size());
     }
 
+    /**
+     * Notifies that an item was removed from the list.
+     * @param position    the position on the list view.
+     */
     protected void notifyItemRemoved(int position) {
         RecyclerView list = (RecyclerView) findViewById(R.id.task_list);
         list.getAdapter().notifyItemRemoved(position);
     }
 
+    /**
+     * Do some operations after adding a task.
+     */
     protected void addTask() {
         refreshTasks();
         Toast toast = Toast.makeText(getApplicationContext(), R.string.task_added, Toast.LENGTH_SHORT);
         toast.show();
     }
 
+    /**
+     * A listener for task cancellation.
+     */
     public class  OnListCancelTaskListener implements CancelTaskDialog.CancelDialogListener {
         @Override
         public void onCancel(TaskList.Task task, int position) {
@@ -301,6 +377,9 @@ cancelTask(holder.mItem, position);
         }
     }
 
+    /**
+     * A listenerfor task completion.
+     */
     public class OnListCompleteTaskListener implements CompleteTaskDialog.CompleteDialogListener {
         @Override
         public void onComplete(TaskList.Task task, int position) {
@@ -315,6 +394,9 @@ cancelTask(holder.mItem, position);
         }
     }
 
+    /**
+     * A listener for task changes.
+     */
     public class OnListTaskChangedListener implements  OnTaskChangedListener {
         @Override
         public void onTaskChanged(TaskList.Task task, int position) {
@@ -322,6 +404,11 @@ cancelTask(holder.mItem, position);
         }
     }
 
+    /**
+     * Update when a task changes.
+     * @param task
+     * @param position
+     */
     protected void updateTask(TaskList.Task task, int position) {
         TaskList.getInstance().setTask(task);
         refreshTasks();
@@ -385,6 +472,9 @@ updateTask(t, position);
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * A listener for new task procedure.
+     */
     protected  class  OnNewTaskListener implements OnEditTaskListener {
 
         @Override
@@ -416,6 +506,9 @@ TaskList.getInstance().addTask(task);
 
     }
 
+    /**
+     * A listener for task edition procedure.
+     */
     protected class  OnUpdateTaskListener implements OnEditTaskListener {
 
         @Override
@@ -450,7 +543,10 @@ new OnListTaskChangedListener().onTaskChanged(task, position);
         }
     }
 
-protected class OnListEditButtonListener implements  OnEditButtonListener {
+    /**
+     * A listener for start edition event.
+     */
+    protected class OnListEditButtonListener implements  OnEditButtonListener {
     @Override
     public void init(TaskList.Task task) {
         EditTask1Fragment fragment = EditTask1Fragment.newInstance(new OnUpdateTaskListener(), task);
@@ -461,7 +557,10 @@ protected class OnListEditButtonListener implements  OnEditButtonListener {
     }
 }
 
-protected class OnFilterChangedListener implements SharedPreferences.OnSharedPreferenceChangeListener {
+    /**
+     * A listener for changes of preferences.
+     */
+    protected class OnFilterChangedListener implements SharedPreferences.OnSharedPreferenceChangeListener {
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (key.equals(SettingsActivity.GeneralPreferenceFragment.hide_canceled) | key.equals(SettingsActivity.GeneralPreferenceFragment.HIDE_COMPLETED))

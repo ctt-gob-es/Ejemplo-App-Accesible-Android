@@ -26,29 +26,44 @@ import es.uah.cc.todomanager.domain.TaskList;
 public class EditTask2Fragment extends Fragment {
 
     public static final String TAG = "es.uah.cc.todomanager.EditTask2Fragment";
-    public static final String EDIT_TASK_2 = "cc.uah.es.todomanager.edittask2";
+    /**
+     * The key for transactions and task data in the arguments.
+     */
+    public static final String EDIT_TASK_2 = "es.uah.cc.todomanager.edittask2";
+    /**
+     * The task which is being edited.
+     */
     private TaskList.Task task;
+    /**
+     * The listener for events.
+     */
     private OnEditTaskListener listener;
 
     public EditTask2Fragment() {
         // Required empty public constructor
     }
 
+    /**
+     * Getter for OnEditTaskListener.
+     * @return The listener.
+     */
     public OnEditTaskListener getOnEditTaskListener() {
         return listener;
     }
 
+    /**
+     * Setter for OnEditTaskListener.
+     * @param listener
+     */
     public void setOnEditTaskListener(OnEditTaskListener listener) {
         this.listener = listener;
     }
 
     /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment EditTask2Fragment.
+     * Factory method.
+     * @param listener    The listener to use.
+     * @param task        The task to be edited.
+     * @return A new instance of the fragment.
      */
     public static EditTask2Fragment newInstance(OnEditTaskListener listener, TaskList.Task task) {
         EditTask2Fragment fragment = new EditTask2Fragment();
@@ -82,6 +97,10 @@ setup(rootView);
         return rootView;
     }
 
+    /**
+     * Shows the date picker and setups the rest of the layout.
+     * @param view
+     */
     protected void setup(View view) {
         final View v = view;
         DatePicker picker = (DatePicker) v.findViewById(R.id.task_deadline);
@@ -117,15 +136,27 @@ setup(rootView);
         });
     }
 
-protected void onFinishPressed(View v) {
+    /**
+     * Finish the edition.
+     * @param v    The view pressed.
+     */
+    protected void onFinishPressed(View v) {
     listener.onFinish(task);
 }
 
-protected void onCancelPressed(View v) {
+    /**
+     * Cancels the edition of the task.
+     * @param v    The view pressed.
+     */
+    protected void onCancelPressed(View v) {
     listener.onCancel(task);
 }
 
-protected  void  onPreviousPressed(View v) {
+    /**
+     * Goes to the previous screen.
+     * @param v    The view pressed.
+     */
+    protected  void  onPreviousPressed(View v) {
 listener.onPreviousStep(task);
 }
 

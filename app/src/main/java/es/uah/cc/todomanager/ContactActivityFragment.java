@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 import es.uah.cc.todomanager.R;
 
 /**
- * A placeholder fragment containing a simple view.
+ * A contact form.
  */
 public class ContactActivityFragment extends Fragment {
 

@@ -30,13 +30,33 @@ import es.uah.cc.todomanager.domain.TaskList;
  */
 public class EditTask1Fragment extends Fragment {
     public static final String TAG = "es.uah.cc.todomanager.EditTask1Fragment";
-    public static final String EDIT_TASK_1 = "cc.uah.es.todomanager.edittask1";
+    /**
+     * A key for transactions and task arguments.
+     */
+    public static final String EDIT_TASK_1 = "es.uah.cc.todomanager.edittask1";
+    /**
+     * Result: Creation of the task was completed.
+     */
     public static final int TASK_CREATION_COMPLETED = 1;
+    /**
+     * Result: Edition of the task was completed.
+     */
     public static final int TASK_EDITION_COMPLETED = 2;
+    /**
+     * Result: Creation of the task was cancelled.
+     */
     public static final int TASK_CREATION_CANCELED = 0;
+    /**
+     * Result: Edition of the task was cancelled.
+     */
     public static  final  int TASK_EDITION_CANCELED = -1;
-
+    /**
+     * Listener for events.
+     */
     private OnEditTaskListener listener;
+    /**
+     * The task which is being edited.
+     */
     private TaskList.Task task;
 
     public EditTask1Fragment() {
@@ -44,11 +64,10 @@ public class EditTask1Fragment extends Fragment {
     }
 
     /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided listener.
-     *
-     * @param listener A listener for on new task next step event.
-     * @return A new instance of fragment EditTask1Fragment.
+     * A factory method.
+     * @param listener    The listener.
+     * @param task        The task to be edited.
+     * @return A new instance of the fragment.
      */
     public static EditTask1Fragment newInstance(OnEditTaskListener listener, TaskList.Task task) {
         EditTask1Fragment fragment = new EditTask1Fragment();
@@ -59,10 +78,18 @@ args.putParcelable(EDIT_TASK_1, task);
         return fragment;
     }
 
+    /**
+     * Getter for the listener.
+     * @return The listener.
+     */
     public OnEditTaskListener getOnEditTaskListener() {
         return listener;
     }
 
+    /**
+     * Setter for the listener.
+     * @param listener    The listener.
+     */
     public void setOnEditTaskListener(OnEditTaskListener listener) {
         this.listener = listener;
     }
@@ -90,6 +117,10 @@ task = getArguments().getParcelable(EDIT_TASK_1);
         return  rootView;
     }
 
+    /**
+     * Load the task's data into the form fields.
+     * @param view    The root view.
+     */
     protected void loadTaskData(View view) {
         final View a = view;
         ((EditText) a.findViewById(R.id.task_name)).setText(task.getName());
@@ -147,20 +178,36 @@ finishButton.setVisibility(View.VISIBLE);
         });
     }
 
+    /**
+     * Goes to the date picker screen.
+     * @param view    The view pressed.
+     */
     public void onNextPressed(View view) {
         updateTask(task);
         listener.onNextStep(task);
     }
 
+    /**
+     * Cancels the edition.
+     * @param view    The view pressed.
+     */
     public void onCancelPressed(View view) {
         listener.onCancel(task);
     }
 
+    /**
+     * Finish the edition.
+     * @param view    The view pressed.
+     */
     public void onFinishPressed(View view) {
 updateTask(task);
         listener.onFinish(task);
     }
 
+    /**
+     * Updates the data of the task with the form entries.
+     * @param task    The task to be updated.
+     */
     protected void updateTask(TaskList.Task task) {
         View v = getView();
         task.setName(((EditText) v.findViewById(R.id.task_name)).getText().toString());

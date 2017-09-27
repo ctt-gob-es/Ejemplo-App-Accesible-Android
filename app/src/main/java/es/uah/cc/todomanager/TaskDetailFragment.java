@@ -24,29 +24,40 @@ import es.uah.cc.todomanager.domain.TaskList;
  * on handsets.
  */
 public class TaskDetailFragment extends Fragment implements CompleteTaskDialog.CompleteDialogListener, CancelTaskDialog.CancelDialogListener {
-    /**
-     * The fragment argument representing the item ID that this fragment
-     * represents.
-     */
     public  static  final  String TAG = "es.uah.cc.todomanager.TaskDetailFragment";
-    public static final String ARG_ITEM_ID = "cc.uah.es.todomanager.item_id";
-    public static final String ARG_ITEM_POS = "cc.uah.es.todomanager.item_ps";
+    /**
+     * The key for the item position on the list view included in the input arguments.
+     */
+    public static final String ARG_ITEM_POS = "es.uah.cc.todomanager.item_ps";
 
     /**
-     * The dummy content this fragment is presenting.
+     * The task this fragment is presenting.
      */
     private TaskList.Task mItem;
+    /**
+     * The position of the task on the list view.
+     */
     private int position;
+    /**
+     * The listener for the changes suffered by the task.
+     */
     private OnTaskChangedListener listener = null;
+    /**
+     * The listener for edit button interactions.
+     */
     private OnEditButtonListener editButtonListener;
 
-    /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
-     */
     public TaskDetailFragment() {
     }
 
+    /**
+     * A factory method.
+     * @param taskChangedListener The listener for changes on the task.
+     * @param editButtonListener  The listener for edit button interactions.
+     * @param task                The task to be presented.
+     * @param position            The position of the task on the list view.
+     * @return A fragment instance.
+     */
     public static TaskDetailFragment newInstance(OnTaskChangedListener taskChangedListener, OnEditButtonListener editButtonListener, TaskList.Task task, int position) {
 TaskDetailFragment fragment = new TaskDetailFragment();
         fragment.setOnTaskChangedListener(taskChangedListener);
@@ -58,10 +69,18 @@ TaskDetailFragment fragment = new TaskDetailFragment();
         return fragment;
     }
 
+    /**
+     * Getter for EditButtonListener
+     * @return The listener.
+     */
     public OnEditButtonListener getEditButtonListener() {
         return editButtonListener;
     }
 
+    /**
+     * The setter for EditButtonListener.
+     * @param editButtonListener    The listener.
+     */
     public void setEditButtonListener(OnEditButtonListener editButtonListener) {
         this.editButtonListener = editButtonListener;
     }
@@ -88,7 +107,7 @@ TaskDetailFragment fragment = new TaskDetailFragment();
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.task_detail, container, false);
 
-        // Show the dummy content as text in a TextView.
+        // Shows the task details.
         if (mItem != null) {
 fillData(rootView);
 showProgressIfComplex(rootView);
@@ -98,7 +117,12 @@ showProgressIfComplex(rootView);
 
         return rootView;
     }
-protected  void fillData(View rootView) {
+
+    /**
+     * Fills the text views with the data from the task.
+     * @param rootView    The root view.
+     */
+    protected  void fillData(View rootView) {
     ((TextView) rootView.findViewById(R.id.task_name)).setText(getResources().getString(R.string.task_name) + " " + mItem.getName());
     int p = R.string.medium_priority;
     switch (mItem.getPriority()) {
@@ -115,11 +139,15 @@ protected  void fillData(View rootView) {
     }
     ((TextView) rootView.findViewById(R.id.task_status)).setText(getResources().getString(R.string.task_status) + " " + getResources().getString(s));
     ((TextView) rootView.findViewById(R.id.task_description)).setText(getResources().getString(R.string.task_description) + "\n" + mItem.getDetails());
+        // If the task has a deadline, it shows it.
     if (mItem.getDeadline() != null) ((TextView) rootView.findViewById(R.id.task_deadline)).setText(getResources().getString(R.string.task_deadline) + " " + DateFormat.getDateInstance(DateFormat.SHORT).format(mItem.getDeadline()));
     else ((View) rootView.findViewById(R.id.task_deadline)).setVisibility(View.INVISIBLE);
 }
 
-
+    /**
+     * Shows a progress bar if the task is complex.
+     * @param rootView    The root view.
+     */
     protected  void showProgressIfComplex(View rootView) {
         if (mItem.isComplex()) {
             SeekBar bar = (SeekBar) rootView.findViewById(R.id.task_progress);
@@ -127,19 +155,21 @@ protected  void fillData(View rootView) {
             bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                    // the task progress is updated each time the progress bar is changed.
                     mItem.setCompleted(progress);
+                    // If progress reaches 100%, task is automatically marked as completed.
                     if (progress == 100) completeTask();
                     listener.onTaskChanged(mItem, position);
                 }
 
                 @Override
                 public void onStartTrackingTouch(SeekBar seekBar) {
-
+//Nothing to do.
                 }
 
                 @Override
                 public void onStopTrackingTouch(SeekBar seekBar) {
-
+// Nothing to do.
                 }
             });
 
@@ -158,6 +188,7 @@ protected  void fillData(View rootView) {
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
+        // If task is not pending, the user will not be able to edit, complete or cancel it.
         if (!(mItem.getStatus() instanceof TaskList.PendingTask)) {
             menu.removeItem(R.id.complete_button);
             menu.removeItem(R.id.cancel_button);
@@ -189,21 +220,16 @@ protected  void fillData(View rootView) {
         }
     }
 
-    public void updateTask(TaskList.Task task) {
-        mItem = task;
-        updateTask();
-    }
-
-    public void updateTask () {
-        fillData(getView());
-        showProgressIfComplex(getView());
-        listener.onTaskChanged(mItem, position);
-    }
-
+    /**
+     * Starts an EditTaskActivity.
+     */
     protected void editTask() {
 editButtonListener.init(mItem);
     }
 
+    /**
+     * Marks a task as completed.
+     */
     protected void completeTask() {
         CompleteTaskDialog dialog = new CompleteTaskDialog(mItem, position, this);
         Bundle args = new Bundle();
@@ -212,6 +238,9 @@ editButtonListener.init(mItem);
         dialog.show(getFragmentManager(), "CompleteTask");
     }
 
+    /**
+     * Marks a task as cancelled.
+     */
     protected void cancelTask() {
         CancelTaskDialog dialog = new CancelTaskDialog(mItem, -1, this);
         Bundle args = new Bundle();
@@ -220,10 +249,18 @@ editButtonListener.init(mItem);
         dialog.show(getFragmentManager(), "CancelDialog");
     }
 
+    /**
+     * Getter for OnTaskChangedListener.
+     * @return The listener.
+     */
     public OnTaskChangedListener getOnTaskChangedListener() {
         return listener;
     }
 
+    /**
+     * Setter for OnTaskChangedListener.
+     * @param listener    The listener.
+     */
     public void setOnTaskChangedListener(OnTaskChangedListener listener) {
         this.listener = listener;
     }
