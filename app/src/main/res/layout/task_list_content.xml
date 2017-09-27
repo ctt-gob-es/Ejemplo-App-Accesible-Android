@@ -32,14 +32,15 @@
         android:layout_width="35dp"
         android:layout_height="35dp"
         android:layout_margin="@dimen/text_margin"
-        android:src="@android:drawable/ic_menu_close_clear_cancel"/>
-
+        android:src="@android:drawable/ic_menu_close_clear_cancel"
+        android:contentDescription="@string/cancel_task"/>
     <ImageButton
         android:id="@+id/complete_button"
         android:layout_width="35dp"
         android:layout_height="35dp"
         android:layout_margin="@dimen/text_margin"
-        android:src="@android:drawable/ic_menu_manage"/>
+        android:src="@android:drawable/ic_menu_manage"
+        android:contentDescription="@string/complete_task"/>
 </LinearLayout>
 
 </LinearLayout>
