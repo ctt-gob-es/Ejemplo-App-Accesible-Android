@@ -94,4 +94,5 @@
     <string name="send_button">Send</string>
     <string name="send_message_confirmation">The message will be sent to our support team. Do you want to continue?</string>
     <string name="add_task">Add task</string>
+    <string name="help_file_name">help.html</string>
 </resources>

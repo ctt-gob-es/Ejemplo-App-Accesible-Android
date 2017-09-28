@@ -91,4 +91,5 @@
     <string name="send_button">Enviar</string>
     <string name="send_message_confirmation">El mensaje será enviado a nuestro equipo de soporte. ¿Desea continuar?</string>
     <string name="add_task">Añadir tarea</string>
+    <string name="help_file_name">help-es.html</string>
 </resources>
