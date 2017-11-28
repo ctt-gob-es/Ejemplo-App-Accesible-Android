@@ -4,7 +4,7 @@ android {
     compileSdkVersion 27
     // buildToolsVersion "26.0.1"
     defaultConfig {
-        applicationId "cc.uah.es.todomanager"
+        applicationId "es.uah.cc.todomanager"
         minSdkVersion 16
         targetSdkVersion 27
         versionCode 1
