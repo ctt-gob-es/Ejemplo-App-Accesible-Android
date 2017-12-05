@@ -1,7 +1,7 @@
 package es.uah.cc.todomanager;
 
 import android.app.Activity;
-import android.icu.text.DateFormat;
+import java.text.DateFormat;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -214,8 +214,8 @@ showProgressIfComplex(rootView);
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.edit_task_option: editTask(); return true;
-            case R.id.complete_button: completeTask();; return true;
-            case R.id.cancel_button: cancelTask();; return true;
+            case R.id.complete_button: completeTask(); return true;
+            case R.id.cancel_button: cancelTask(); return true;
             default: return super.onOptionsItemSelected(item);
         }
     }
