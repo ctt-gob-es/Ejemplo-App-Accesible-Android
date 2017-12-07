@@ -9,5 +9,5 @@
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
     app:layoutManager="LinearLayoutManager"
-    tools:context="cc.uah.es.todomanager.es.uah.cc.todomanager.TaskListActivity"
+    tools:context="es.uah.cc.todomanager.TaskListActivity"
     tools:listitem="@layout/task_list_content" />

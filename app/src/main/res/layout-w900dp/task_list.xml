@@ -9,7 +9,7 @@
     android:divider="?android:attr/dividerHorizontal"
     android:orientation="horizontal"
     android:showDividers="middle"
-    tools:context="cc.uah.es.todomanager.es.uah.cc.todomanager.TaskListActivity">
+    tools:context="es.uah.cc.todomanager.TaskListActivity">
 
     <!--
     This layout is a two-pane layout for the Tasks

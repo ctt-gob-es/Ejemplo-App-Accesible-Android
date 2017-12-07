@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="cc.uah.es.todomanager.es.uah.cc.todomanager.HelpActivity">
+    tools:context="es.uah.cc.todomanager.HelpActivity">
 <WebView
     android:id="@+id/help_view"
     android:layout_width="match_parent"
