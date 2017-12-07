@@ -104,7 +104,7 @@ setup(rootView);
     protected void setup(View view) {
         final View v = view;
         DatePicker picker = (DatePicker) v.findViewById(R.id.task_deadline);
-        picker.setMinDate(Calendar.getInstance().getTimeInMillis());
+        picker.setMinDate(Calendar.getInstance().getTimeInMillis() - 1000);
         final Date d = task.getDeadline();
         picker.init(d.getYear(), d.getMonth(), d.getDay(), new DatePicker.OnDateChangedListener() {
             @Override
