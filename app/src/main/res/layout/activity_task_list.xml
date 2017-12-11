@@ -35,11 +35,14 @@
         android:id="@+id/fab"
         android:layout_width="36dp"
         android:layout_height="36dp"
-        android:padding="12dp"
-        android:layout_gravity="bottom|end"
+        android:layout_gravity="bottom|center"
         android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_input_add"
-        android:contentDescription="@string/add_task" />
+        android:padding="12dp"
+        android:contentDescription="@string/add_task"
+        app:backgroundTint="@color/colorPrimaryDark"
+        android:tint="@android:color/white"
+        android:scaleType="center"
+        app:srcCompat="@android:drawable/ic_input_add" />
 
 
 </android.support.design.widget.CoordinatorLayout>
