@@ -48,7 +48,7 @@
         android:layout_margin="@dimen/text_margin"
         android:lines="4"
         android:singleLine="false"
-        android:inputType="textAutoCorrect|textCapSentences|textLongMessage|textMultiLine"/>
+        android:inputType="textAutoCorrect|textCapSentences|textLongMessage|textMultiLine" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -58,7 +58,7 @@
         android:id="@+id/task_is_complex"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/task_is_complex"/>
+        android:text="@string/task_is_complex" />
         <CheckBox
             android:id="@+id/task_has_deadline"
             android:layout_width="wrap_content"

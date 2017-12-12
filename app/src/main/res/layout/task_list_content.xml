@@ -7,7 +7,8 @@
     <LinearLayout
         android:layout_width="280dp"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:focusable="true">
     <TextView
         android:id="@+id/name"
         android:layout_width="match_parent"
@@ -40,7 +41,7 @@
         android:layout_height="35dp"
         android:layout_margin="@dimen/text_margin"
         android:src="@android:drawable/ic_menu_manage"
-        android:contentDescription="@string/complete_task"/>
+        android:contentDescription="@string/complete_task" />
 </LinearLayout>
 
 </LinearLayout>

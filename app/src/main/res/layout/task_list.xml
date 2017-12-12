@@ -10,4 +10,5 @@
     android:layout_marginRight="16dp"
     app:layoutManager="LinearLayoutManager"
     tools:context="es.uah.cc.todomanager.TaskListActivity"
-    tools:listitem="@layout/task_list_content" />
+    tools:listitem="@layout/task_list_content"
+    android:accessibilityTraversalAfter="@id/fab"/>
