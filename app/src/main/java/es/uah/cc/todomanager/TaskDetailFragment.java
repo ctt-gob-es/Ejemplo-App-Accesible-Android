@@ -214,8 +214,9 @@ showProgressIfComplex(rootView);
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.edit_task_option: editTask(); return true;
-            case R.id.complete_button: completeTask(); return true;
-            case R.id.cancel_button: cancelTask(); return true;
+            case R.id.complete_button: completeTask();; return true;
+            case R.id.cancel_button: cancelTask();; return true;
+            case R.id.save_task_option: listener.onSave(mItem, position);
             default: return super.onOptionsItemSelected(item);
         }
     }

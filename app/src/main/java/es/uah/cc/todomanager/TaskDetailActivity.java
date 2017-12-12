@@ -101,7 +101,7 @@ public class TaskDetailActivity extends AppCompatActivity implements OnTaskChang
     }
 
     @Override
-    public void onBackPressed() {
+    public void onSave(TaskList.Task task, int pos) {
         Intent resultIntent = new Intent();
         resultIntent.putExtra(TaskDetailFragment.ARG_ITEM_POS, position);
         resultIntent.putExtra(TaskListActivity.ARG_TASK, task);

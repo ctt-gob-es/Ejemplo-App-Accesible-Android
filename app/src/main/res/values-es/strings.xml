@@ -27,6 +27,7 @@
     <string name="canceled_task">Cancelada</string>
     <string name="task_completion">Progreso:</string>
     <string name="edit_task">Editar</string>
+    <string name="save">Guardar</string>
     <string name="edit">Editar</string>
     <string name="complete_task">Completar tarea</string>
     <string name="cancel_task">Cancelar tarea</string>

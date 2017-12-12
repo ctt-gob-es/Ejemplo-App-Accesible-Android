@@ -400,7 +400,10 @@ cancelTask(holder.mItem, position);
     public class OnListTaskChangedListener implements  OnTaskChangedListener {
         @Override
         public void onTaskChanged(TaskList.Task task, int position) {
-            updateTask(task, position);
+            // No action
+        }
+        public void onSave(TaskList.Task task, int pos) {
+            updateTask(task, pos);
         }
     }
 

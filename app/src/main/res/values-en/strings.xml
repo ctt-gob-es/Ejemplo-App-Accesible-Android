@@ -27,6 +27,7 @@
     <string name="canceled_task">Canceled</string>
     <string name="task_completion">Completion:</string>
     <string name="edit_task">Edit</string>
+    <string name="save">Save</string>
     <string name="edit">Edit</string>
     <string name="complete_task">Complete task</string>
     <string name="cancel_task">Cancel task</string>
