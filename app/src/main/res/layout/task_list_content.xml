@@ -25,21 +25,23 @@
         </LinearLayout>
 
     <LinearLayout
-        android:layout_width="150dp"
-        android:layout_height="146dp"
+        android:layout_width="104dp"
+        android:layout_height="104dp"
         android:orientation="vertical">
     <ImageButton
         android:id="@+id/cancel_button"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:layout_margin="@dimen/text_margin"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:padding="12dp"
+        android:layout_margin="8dp"
         android:src="@android:drawable/ic_menu_close_clear_cancel"
         android:contentDescription="@string/cancel_task"/>
     <ImageButton
         android:id="@+id/complete_button"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:layout_margin="@dimen/text_margin"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:padding="12dp"
+        android:layout_margin="8dp"
         android:src="@android:drawable/ic_menu_manage"
         android:contentDescription="@string/complete_task" />
 </LinearLayout>

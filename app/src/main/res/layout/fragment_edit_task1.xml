@@ -58,11 +58,13 @@
         android:id="@+id/task_is_complex"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_margin="8dp"
         android:text="@string/task_is_complex" />
         <CheckBox
             android:id="@+id/task_has_deadline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="8dp"
             android:text="@string/task_has_deadline" />
 
 </LinearLayout>
@@ -70,13 +72,14 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
+        android:orientation="horizontal"
+        android:layout_gravity="center">
         <Button
             android:id="@+id/finish_button"
             style="@android:style/Widget.Material.Button"
             android:layout_width="wrap_content"
-            android:layout_height="36dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
             android:text="@string/finish_button"
             style="@android:style/Widget.Material.Button" />
 
@@ -84,7 +87,8 @@
             android:id="@+id/next_button"
             style="@android:style/Widget.Material.Button"
             android:layout_width="wrap_content"
-            android:layout_height="36dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
             android:text="@string/next_button"
             style="@android:style/Widget.Material.Button" />
 
@@ -92,7 +96,8 @@
             android:id="@+id/cancel_button"
             style="@android:style/Widget.Material.Button"
             android:layout_width="wrap_content"
-            android:layout_height="36dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
             android:text="@string/cancel_button"
             android:textSize="12sp" />
 
