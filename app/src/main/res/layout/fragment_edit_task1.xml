@@ -61,7 +61,7 @@
             android:id="@+id/task_has_deadline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/task_has_deadline"/>
+            android:text="@string/task_has_deadline" />
 
 </LinearLayout>
 
@@ -76,7 +76,7 @@
             android:layout_width="wrap_content"
             android:layout_height="36dp"
             android:text="@string/finish_button"
-            android:textSize="12sp" />
+            style="@android:style/Widget.Material.Button" />
 
         <Button
             android:id="@+id/next_button"
@@ -84,7 +84,7 @@
             android:layout_width="wrap_content"
             android:layout_height="36dp"
             android:text="@string/next_button"
-            android:textSize="12sp" />
+            style="@android:style/Widget.Material.Button" />
 
         <Button
             android:id="@+id/cancel_button"
