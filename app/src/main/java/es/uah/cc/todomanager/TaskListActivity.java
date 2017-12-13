@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -170,16 +171,34 @@ refreshTasks((RecyclerView) findViewById(R.id.task_list));
                 switch (holder.mItem.getPriority()) {
                     case TaskList.Task.HIGH_PRIORITY:
                         holder.mNameView.setTextColor(getResources().getColor(R.color.high_priority));
+                        // holder.mStatus.setImageDrawable(getResources().getDrawable(android.R.drawable.arrow_up_float, getApplicationContext().getTheme()));
+                        holder.mStatus.setImageResource(android.R.drawable.arrow_up_float);
+                        holder.mStatus.setContentDescription(getResources().getString(R.string.high_priority));
                         break;
                     case TaskList.Task.LOW_PRIORITY:
                         holder.mNameView.setTextColor(getResources().getColor(R.color.low_priority));
+                        // holder.mStatus.setImageDrawable(getResources().getDrawable(android.R.drawable.arrow_down_float, getApplicationContext().getTheme()));
+                        holder.mStatus.setImageResource(android.R.drawable.arrow_down_float);
+                        holder.mStatus.setContentDescription(getResources().getString(R.string.low_priority));
                         break;
                     default: holder.mNameView.setTextColor(getResources().getColor(R.color.medium_priority));
+                        holder.mStatus.setImageResource(0);
+                        holder.mStatus.setContentDescription("");
                 }
             } else {
                 // Else we change the color of the task's title depending on its status.
-                if (holder.mItem.getStatus() instanceof TaskList.CompletedTask) holder.mNameView.setTextColor(getResources().getColor(R.color.completed));
-                else if (holder.mItem.getStatus() instanceof TaskList.CanceledTask) holder.mNameView.setTextColor(getResources().getColor(R.color.canceled));
+                if (holder.mItem.getStatus() instanceof TaskList.CompletedTask) {
+                    holder.mNameView.setTextColor(getResources().getColor(R.color.completed));
+// holder.mStatus.setImageDrawable(getResources().getDrawable(android.R.drawable.checkbox_on_background, getApplicationContext().getTheme()));
+                    holder.mStatus.setImageResource(android.R.drawable.checkbox_on_background);
+                    holder.mStatus.setContentDescription(getResources().getString(R.string.completed_task));
+                }
+                else if (holder.mItem.getStatus() instanceof TaskList.CanceledTask) {
+                    holder.mNameView.setTextColor(getResources().getColor(R.color.canceled));
+                    // holder.mStatus.setImageDrawable(getResources().getDrawable(android.R.drawable.ic_input_delete, getApplicationContext().getTheme()));
+                    holder.mStatus.setImageResource(android.R.drawable.ic_delete);
+                    holder.mStatus.setContentDescription(getResources().getString(R.string.canceled_task));
+                }
             }
 
             holder.mNameView.setText(holder.mItem.getName());
@@ -230,6 +249,7 @@ cancelTask(holder.mItem, position);
             public final View mView;
             public final TextView mNameView;
             public final TextView mDeadlineView;
+            public final ImageView mStatus;
             public final ImageButton mCancelButton;
             public final ImageButton mCompleteButton;
             public TaskList.Task mItem;
@@ -239,6 +259,7 @@ cancelTask(holder.mItem, position);
                 mView = view;
                 mNameView = (TextView) view.findViewById(R.id.name);
                 mDeadlineView = (TextView) view.findViewById(R.id.deadline);
+                mStatus = (ImageView) view.findViewById(R.id.status);
                 mCancelButton = (ImageButton) view.findViewById(R.id.cancel_button);
                 mCompleteButton = (ImageButton) view.findViewById(R.id.complete_button);
             }
