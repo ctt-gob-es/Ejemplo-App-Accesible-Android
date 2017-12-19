@@ -21,3 +21,6 @@
 
  La aplicación no tiene una funcionalidad real y se centra sobre todo en la demostración de las diferentes características de accesibilidad
  que una aplicación de este tipo podría necesitar. Puede encontrar que la activación de algunos controles no desencadena una acción real.
+
+ ## Licencia
+ <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Licencia Creative Commons" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a><br /><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">Ejemplo App Accesible Android</span> por <a xmlns:cc="http://creativecommons.org/ns#" href="www.cc.uah.es" property="cc:attributionName" rel="cc:attributionURL">Universidad de Alcalá, Departamento de Ciencias de la Computación</a> se distribuye bajo una <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Licencia Creative Commons Atribución-CompartirIgual 4.0 Internacional</a>.
