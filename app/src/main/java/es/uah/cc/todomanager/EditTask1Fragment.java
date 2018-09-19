@@ -184,7 +184,12 @@ finishButton.setVisibility(View.VISIBLE);
      */
     public void onNextPressed(View view) {
         updateTask(task);
-        listener.onNextStep(task);
+        if (task.getName().equals("")) {
+            ErrorTaskDialog dialog = new ErrorTaskDialog();
+            dialog.show(getFragmentManager(), "ErrorTaskDialog");
+        }
+
+        else listener.onNextStep(task);
     }
 
     /**
@@ -201,7 +206,11 @@ finishButton.setVisibility(View.VISIBLE);
      */
     public void onFinishPressed(View view) {
 updateTask(task);
-        listener.onFinish(task);
+if (task.getName().equals("")) {
+    ErrorTaskDialog dialog = new ErrorTaskDialog();
+    dialog.show(getFragmentManager(), "ErrorTaskDialog");
+}
+        else listener.onFinish(task);
     }
 
     /**

@@ -93,4 +93,7 @@
     <string name="send_message_confirmation">El mensaje será enviado a nuestro equipo de soporte. ¿Desea continuar?</string>
     <string name="add_task">Añadir tarea</string>
     <string name="help_file_name">help-es.html</string>
+    <string name="error_task_title">Información errónea</string>
+    <string name="error_task_message">El título de la tarea no puede estar vacío.</string>
+    <string name="ok">Aceptar</string>
 </resources>
