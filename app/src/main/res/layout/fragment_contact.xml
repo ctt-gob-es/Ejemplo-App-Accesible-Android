@@ -36,9 +36,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/message"
-        android:labelFor="@+id/message"/>
+        android:labelFor="@+id/message_body"/>
     <EditText
-        android:id="@+id/message"
+        android:id="@+id/message_body"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:singleLine="false"

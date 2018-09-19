@@ -96,4 +96,7 @@
     <string name="error_task_title">Información errónea</string>
     <string name="error_task_message">El título de la tarea no puede estar vacío.</string>
     <string name="ok">Aceptar</string>
+    <string name="empty_name_msg">Tu nombre no puede estar vacío.</string>
+    <string name="invalid_email_msg">Tu e-mail es inválido. Por favor, compruébalo.</string>
+    <string name="empty_body_msg">El cuerpo del mensaje no puede estar vacío.</string>
 </resources>

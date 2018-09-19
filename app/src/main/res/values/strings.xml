@@ -99,4 +99,7 @@
     <string name="error_task_title">Wrong info</string>
     <string name="error_task_message">The title of the task cannot be empty.</string>
     <string name="ok">OK</string>
+    <string name="empty_name_msg">Your name cannot be empty.</string>
+    <string name="invalid_email_msg">Your email is invalid. Please, check it.</string>
+    <string name="empty_body_msg">The body of the message cannot be empty.</string>
 </resources>
