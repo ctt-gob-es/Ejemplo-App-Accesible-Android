@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -215,8 +216,8 @@ refreshTasks((RecyclerView) findViewById(R.id.task_list));
                 holder.mCompleteButton.setVisibility(View.VISIBLE);
                 holder.mCancelButton.setVisibility(View.VISIBLE);
             }
-// If the user presses the title of the task its details will be shown.
-            holder.mNameView.setOnClickListener(new View.OnClickListener() {
+// If the user presses the of the task its details will be shown.
+            holder.mContainer.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     viewTask(holder.mItem, position, v);
@@ -252,6 +253,7 @@ cancelTask(holder.mItem, position);
             public final ImageView mStatus;
             public final ImageButton mCancelButton;
             public final ImageButton mCompleteButton;
+            public final RelativeLayout mContainer;
             public TaskList.Task mItem;
 
             public ViewHolder(View view) {
@@ -262,6 +264,7 @@ cancelTask(holder.mItem, position);
                 mStatus = (ImageView) view.findViewById(R.id.status);
                 mCancelButton = (ImageButton) view.findViewById(R.id.cancel_button);
                 mCompleteButton = (ImageButton) view.findViewById(R.id.complete_button);
+mContainer = (RelativeLayout) view.findViewById(R.id.task_container);
             }
 
             @Override

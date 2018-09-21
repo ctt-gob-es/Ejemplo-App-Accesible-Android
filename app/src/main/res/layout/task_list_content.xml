@@ -5,6 +5,7 @@
     android:orientation="horizontal">
 
     <RelativeLayout
+        android:id="@+id/task_container"
         android:layout_width="280dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -16,7 +17,8 @@
             android:padding="12dp"
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
-            android:scaleType="center"/>
+            android:scaleType="center"
+            android:focusable="false"/>
 
     <TextView
         android:id="@+id/name"
@@ -24,7 +26,8 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/text_margin"
         android:textAppearance="?attr/textAppearanceListItem"
-        android:layout_toRightOf="@+id/status"/>
+        android:layout_toRightOf="@+id/status"
+        android:focusable="false"/>
 
     <TextView
         android:id="@+id/deadline"
@@ -32,7 +35,8 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/text_margin"
         android:layout_below="@+id/name"
-        android:textAppearance="?attr/textAppearanceListItem" />
+        android:textAppearance="?attr/textAppearanceListItem"
+        android:focusable="false"/>
         
 
         </RelativeLayout>
