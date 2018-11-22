@@ -5,7 +5,7 @@
 [ejemplo_ios]: https://github.com/ctt-gob-es/Ejemplo-App-Accesible-iOS
 [atica2018]: http://www.cc.uah.es/Atica/Atica2018/
 
-# ToDo Manager
+# Ejemplo de corrección de errores de accesibilidad en una App para Android
 
  Esta aplicación para Android es un ejemplo del uso de la [GUÍA DE ACCESIBILIDAD DE APLICACIONES MÓVILES (APPS)][guia]
  para ayudar en el cumplimiento de la [directiva 2016/2102 de la Unión Europea][D2016_2102].
