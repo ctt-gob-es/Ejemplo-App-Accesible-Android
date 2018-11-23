@@ -1,4 +1,5 @@
 [guia]: https://administracionelectronica.gob.es/pae_Home/dam/jcr:3746627f-da12-40af-a5f5-20c42bb8c453/2017_Guia_accesibilidad_aplicaciones_moviles_apps.pdf
+[rd1112]: https://www.boe.es/diario_boe/txt.php?id=BOE-A-2018-12699
 [en301549]: http://www.etsi.org/deliver/etsi_en/301500_301599/301549/01.01.02_60/en_301549v010102p.pdf
 [D2016_2102]: https://www.boe.es/doue/2016/327/L00001-00015.pdf
 [appacces]: http://tifyc-pmi.cc.uah.es/appacces
@@ -7,9 +8,7 @@
 
 # Ejemplo de corrección de errores de accesibilidad en una App para Android
 
- Esta aplicación para Android es un ejemplo del uso de la [GUÍA DE ACCESIBILIDAD DE APLICACIONES MÓVILES (APPS)][guia]
- para ayudar en el cumplimiento de la [directiva 2016/2102 de la Unión Europea][D2016_2102].
- Esta directiva obliga a todas las entidades del sector público a cumplir los requisitos de accesibilidad para la web y las aplicaciones móviles recogidos en la [EN 501 349][EN301549].
+Esta aplicación para Android es un ejemplo del uso de la [GUÍA DE ACCESIBILIDAD DE APLICACIONES MÓVILES (APPS)][guia] para ayudar en el cumplimiento del [Real Decreto 1112/2018, sobre accesibilidad de los sitios web y aplicaciones para dispositivos móviles del sector público][rd1112]. Este real decreto obliga a todas las entidades del sector público a cumplir los requisitos de accesibilidad para la web y las aplicaciones móviles recogidos en la norma [EN 501 349][EN301549].
  En concreto, todas las aplicaciones móviles implicadas deberán satisfacerlos antes del 23 de junio de 2021 sin prórroga posible.
 
  Tanto la guía como los ejemplos de aplicación han sido desarrollados por un grupo de investigación de la [Universidad de Alcalá (UAH)][appacces]
