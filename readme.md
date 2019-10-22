@@ -20,13 +20,17 @@ Esta aplicación para Android es un ejemplo del uso de la [GUÍA DE ACCESIBILIDA
  En cambio, la rama accesible se ha creado para corregir las deficiencias que presentaba la aplicación en esta primera versión.
 
 La aplicación no tiene una funcionalidad real y se centra sobre todo en la demostración de las diferentes características de accesibilidad que una aplicación de este tipo podría necesitar. Puede encontrar que la activación de algunos controles no desencadena una acción real.
- 
+
  Se ha publicado un trabajo describiendo los errores de accesibilidad de la versión original de la aplicación y cómo se han corregido en la versión accesible. 
  El trabajo está incluido en el libro de actas del congreso ATICA 2018, con esta referencia:
- 
+
  * Estrada-Martínez, F.J. Aguado-Delgado, J., Hilera, J.R., Otón, S., Gutiérrez-Martínez, J.M. (2018). Corrección de errores de accesibilidad en una aplicación móvil nativa: Caso de estudio. ATICA2018: Aplicación de Tecnologías de la Información y Comunicaciones Avanzadas y Accesibilidad, Universidad de Alcalá, pp. 86-92. [http://www.cc.uah.es/Atica/Atica2018/][atica2018]. 
 
 También está disponible en este repositorio, en el archivo **CorreccionErrores.pdf**.
 
  ## Licencia
  <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Licencia Creative Commons" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a><br /><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">Ejemplo App Accesible Android</span> por <a xmlns:cc="http://creativecommons.org/ns#" href="www.cc.uah.es" property="cc:attributionName" rel="cc:attributionURL">Universidad de Alcalá, Departamento de Ciencias de la Computación</a> se distribuye bajo una <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Licencia Creative Commons Atribución-CompartirIgual 4.0 Internacional</a>.
+
+## Material extra
+
+En la carpeta "material-extra" hay material complementario que puede ser útil en la evaluación de la accesibilidad de apps para móviles, como presentaciones y ejemplos de evaluación de apps reales.
