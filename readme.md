@@ -33,4 +33,4 @@ También está disponible en este repositorio, en el archivo **CorreccionErrores
 
 ## Material extra
 
-En la carpeta "material-extra" hay material complementario que puede ser útil en la evaluación de la accesibilidad de apps para móviles, como presentaciones y ejemplos de evaluación de apps reales.
+En la carpeta "material-extra" hay material complementario que puede ser útil en la evaluación de la accesibilidad de apps para dispositivos móviles.
